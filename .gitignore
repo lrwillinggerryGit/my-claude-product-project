@@ -15,3 +15,6 @@ npm-debug.log*
 
 # Backup of former nested repo metadata
 .git_disabled_backup/
+
+# Claude Code 本地个人设置（不入库）
+claude-my-product/claude-my-product-dist/.claude/
