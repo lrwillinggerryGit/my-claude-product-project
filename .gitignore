@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Backup of former nested repo metadata
+.git_disabled_backup/

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>俄罗斯方块</title>
+<style>
+  body {
+    margin: 0;
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    padding: 20px;
+  }
+  .game-area {
+    border: 3px solid #4a4a8a;
+    border-radius: 8px;
+    box-shadow: 0 0 30px rgba(100, 100, 255, 0.5);
+    background: #0a0a1a;
+  }
+  canvas {
+    display: block;
+    background: #0a0a1a;
+  }
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 180px;
+  }
+  .panel {
+    background: rgba(40, 40, 80, 0.6);
+    border: 2px solid #4a4a8a;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+  }
+  .panel h3 {
+    margin: 0 0 10px;
+    color: #8ec5fc;
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+  .panel p {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffd700;
+  }
+  #next-canvas {
+    background: #0a0a1a;
+    border-radius: 4px;
+    margin: 0 auto;
+    display: block;
+  }
+  .controls {
+    font-size: 13px;
+    color: #aaa;
+    line-height: 1.8;
+    text-align: left;
+  }
+  .controls kbd {
+    background: #2a2a5a;
+    border: 1px solid #4a4a8a;
+    border-radius: 3px;
+    padding: 2px 6px;
+    font-family: monospace;
+    color: #fff;
+  }
+  button {
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    width: 100%;
+    transition: transform 0.1s;
+  }
+  button:hover { transform: scale(1.05); }
+  button:active { transform: scale(0.98); }
+  .game-over {
+    position: absolute;
+    background: rgba(0, 0, 0, 0.85);
+    color: #ff4444;
+    padding: 30px 50px;
+    border-radius: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+    display: none;
+    border: 2px solid #ff4444;
+  }
+  h1 {
+    text-align: center;
+    margin: 0 0 15px;
+    background: linear-gradient(90deg, #8ec5fc, #e0c3fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 22px;
+    letter-spacing: 3px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="game-area" style="position: relative;">
+      <canvas id="game" width="300" height="600"></canvas>
+      <div class="game-over" id="game-over">
+        游戏结束<br>
+        <span style="font-size:16px;color:#fff;">按 R 键重新开始</span>
+      </div>
+    </div>
+    <div class="sidebar">
+      <h1>俄罗斯方块</h1>
+      <div class="panel">
+        <h3>分数</h3>
+        <p id="score">0</p>
+      </div>
+      <div class="panel">
+        <h3>等级</h3>
+        <p id="level">1</p>
+      </div>
+      <div class="panel">
+        <h3>消除行</h3>
+        <p id="lines">0</p>
+      </div>
+      <div class="panel">
+        <h3>下一个</h3>
+        <canvas id="next-canvas" width="120" height="120"></canvas>
+      </div>
+      <div class="panel">
+        <h3>操作说明</h3>
+        <div class="controls">
+          <kbd>←</kbd> <kbd>→</kbd> 移动<br>
+          <kbd>↓</kbd> 加速下落<br>
+          <kbd>↑</kbd> 旋转方块<br>
+          <kbd>空格</kbd> 直接落下<br>
+          <kbd>P</kbd> 暂停 / 继续<br>
+          <kbd>R</kbd> 重新开始
+        </div>
+      </div>
+      <button onclick="restart()">重新开始</button>
+    </div>
+  </div>
+
+<script>
+const COLS = 10;
+const ROWS = 20;
+const BLOCK = 30;
+
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const nextCanvas = document.getElementById('next-canvas');
+const nctx = nextCanvas.getContext('2d');
+
+const SHAPES = {
+  I: { color: '#00f0f0', shape: [[1,1,1,1]] },
+  O: { color: '#f0f000', shape: [[1,1],[1,1]] },
+  T: { color: '#a000f0', shape: [[0,1,0],[1,1,1]] },
+  S: { color: '#00f000', shape: [[0,1,1],[1,1,0]] },
+  Z: { color: '#f00000', shape: [[1,1,0],[0,1,1]] },
+  J: { color: '#0000f0', shape: [[1,0,0],[1,1,1]] },
+  L: { color: '#f0a000', shape: [[0,0,1],[1,1,1]] }
+};
+const KEYS = Object.keys(SHAPES);
+
+let grid, current, next, score, level, lines, dropCounter, dropInterval, lastTime, gameOver, paused;
+
+function createGrid() {
+  return Array.from({length: ROWS}, () => Array(COLS).fill(null));
+}
+
+function randomPiece() {
+  const k = KEYS[Math.floor(Math.random() * KEYS.length)];
+  const s = SHAPES[k];
+  return {
+    shape: s.shape.map(r => r.slice()),
+    color: s.color,
+    x: Math.floor(COLS/2) - Math.ceil(s.shape[0].length/2),
+    y: 0
+  };
+}
+
+function drawBlock(context, x, y, color, size = BLOCK) {
+  context.fillStyle = color;
+  context.fillRect(x*size, y*size, size, size);
+  context.strokeStyle = 'rgba(0,0,0,0.4)';
+  context.lineWidth = 2;
+  context.strokeRect(x*size, y*size, size, size);
+  // 高光
+  context.fillStyle = 'rgba(255,255,255,0.3)';
+  context.fillRect(x*size+2, y*size+2, size-4, 4);
+  context.fillRect(x*size+2, y*size+2, 4, size-4);
+}
+
+function drawGrid() {
+  ctx.fillStyle = '#0a0a1a';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // 网格线
+  ctx.strokeStyle = 'rgba(80,80,140,0.2)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= COLS; i++) {
+    ctx.beginPath();
+    ctx.moveTo(i*BLOCK, 0);
+    ctx.lineTo(i*BLOCK, ROWS*BLOCK);
+    ctx.stroke();
+  }
+  for (let i = 0; i <= ROWS; i++) {
+    ctx.beginPath();
+    ctx.moveTo(0, i*BLOCK);
+    ctx.lineTo(COLS*BLOCK, i*BLOCK);
+    ctx.stroke();
+  }
+
+  // 已落定方块
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (grid[r][c]) drawBlock(ctx, c, r, grid[r][c]);
+    }
+  }
+
+  // 当前方块的投影
+  if (current && !gameOver) {
+    const ghost = { ...current, shape: current.shape, y: current.y };
+    while (!collide(ghost.x, ghost.y + 1, ghost.shape)) ghost.y++;
+    ctx.globalAlpha = 0.25;
+    ghost.shape.forEach((row, dy) => {
+      row.forEach((v, dx) => {
+        if (v) drawBlock(ctx, ghost.x + dx, ghost.y + dy, ghost.color);
+      });
+    });
+    ctx.globalAlpha = 1;
+  }
+
+  // 当前方块
+  if (current) {
+    current.shape.forEach((row, dy) => {
+      row.forEach((v, dx) => {
+        if (v) drawBlock(ctx, current.x + dx, current.y + dy, current.color);
+      });
+    });
+  }
+}
+
+function drawNext() {
+  nctx.fillStyle = '#0a0a1a';
+  nctx.fillRect(0, 0, nextCanvas.width, nextCanvas.height);
+  if (!next) return;
+  const size = 24;
+  const w = next.shape[0].length;
+  const h = next.shape.length;
+  const ox = (nextCanvas.width - w*size) / 2;
+  const oy = (nextCanvas.height - h*size) / 2;
+  next.shape.forEach((row, dy) => {
+    row.forEach((v, dx) => {
+      if (v) {
+        nctx.fillStyle = next.color;
+        nctx.fillRect(ox + dx*size, oy + dy*size, size, size);
+        nctx.strokeStyle = 'rgba(0,0,0,0.4)';
+        nctx.lineWidth = 2;
+        nctx.strokeRect(ox + dx*size, oy + dy*size, size, size);
+        nctx.fillStyle = 'rgba(255,255,255,0.3)';
+        nctx.fillRect(ox + dx*size + 2, oy + dy*size + 2, size - 4, 3);
+      }
+    });
+  });
+}
+
+function collide(x, y, shape) {
+  for (let r = 0; r < shape.length; r++) {
+    for (let c = 0; c < shape[r].length; c++) {
+      if (!shape[r][c]) continue;
+      const nx = x + c;
+      const ny = y + r;
+      if (nx < 0 || nx >= COLS || ny >= ROWS) return true;
+      if (ny >= 0 && grid[ny][nx]) return true;
+    }
+  }
+  return false;
+}
+
+function merge() {
+  current.shape.forEach((row, dy) => {
+    row.forEach((v, dx) => {
+      if (v) {
+        const ny = current.y + dy;
+        const nx = current.x + dx;
+        if (ny >= 0) grid[ny][nx] = current.color;
+      }
+    });
+  });
+}
+
+function rotate(shape) {
+  const rows = shape.length;
+  const cols = shape[0].length;
+  const result = Array.from({length: cols}, () => Array(rows).fill(0));
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      result[c][rows-1-r] = shape[r][c];
+    }
+  }
+  return result;
+}
+
+function tryRotate() {
+  const rotated = rotate(current.shape);
+  const kicks = [0, -1, 1, -2, 2];
+  for (const k of kicks) {
+    if (!collide(current.x + k, current.y, rotated)) {
+      current.x += k;
+      current.shape = rotated;
+      return;
+    }
+  }
+}
+
+function clearLines() {
+  let cleared = 0;
+  for (let r = ROWS - 1; r >= 0; r--) {
+    if (grid[r].every(c => c)) {
+      grid.splice(r, 1);
+      grid.unshift(Array(COLS).fill(null));
+      cleared++;
+      r++;
+    }
+  }
+  if (cleared > 0) {
+    const points = [0, 100, 300, 500, 800];
+    score += points[cleared] * level;
+    lines += cleared;
+    level = Math.floor(lines / 10) + 1;
+    dropInterval = Math.max(100, 1000 - (level - 1) * 100);
+    updateUI();
+  }
+}
+
+function spawn() {
+  current = next || randomPiece();
+  next = randomPiece();
+  drawNext();
+  if (collide(current.x, current.y, current.shape)) {
+    gameOver = true;
+    document.getElementById('game-over').style.display = 'block';
+  }
+}
+
+function drop() {
+  if (!collide(current.x, current.y + 1, current.shape)) {
+    current.y++;
+  } else {
+    merge();
+    clearLines();
+    spawn();
+  }
+  dropCounter = 0;
+}
+
+function hardDrop() {
+  while (!collide(current.x, current.y + 1, current.shape)) current.y++;
+  merge();
+  clearLines();
+  spawn();
+  dropCounter = 0;
+}
+
+function updateUI() {
+  document.getElementById('score').textContent = score;
+  document.getElementById('level').textContent = level;
+  document.getElementById('lines').textContent = lines;
+}
+
+function loop(time = 0) {
+  if (gameOver) { drawGrid(); return; }
+  if (!paused) {
+    const delta = time - lastTime;
+    dropCounter += delta;
+    if (dropCounter > dropInterval) drop();
+  }
+  lastTime = time;
+  drawGrid();
+
+  if (paused) {
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 36px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('暂停', canvas.width/2, canvas.height/2);
+    ctx.font = '16px Arial';
+    ctx.fillText('按 P 键继续', canvas.width/2, canvas.height/2 + 30);
+  }
+
+  requestAnimationFrame(loop);
+}
+
+function restart() {
+  grid = createGrid();
+  score = 0;
+  level = 1;
+  lines = 0;
+  dropCounter = 0;
+  dropInterval = 1000;
+  lastTime = 0;
+  gameOver = false;
+  paused = false;
+  next = randomPiece();
+  spawn();
+  updateUI();
+  document.getElementById('game-over').style.display = 'none';
+  requestAnimationFrame(loop);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'r' || e.key === 'R') { restart(); return; }
+  if (gameOver) return;
+  if (e.key === 'p' || e.key === 'P') { paused = !paused; return; }
+  if (paused) return;
+
+  switch(e.key) {
+    case 'ArrowLeft':
+      if (!collide(current.x - 1, current.y, current.shape)) current.x--;
+      e.preventDefault();
+      break;
+    case 'ArrowRight':
+      if (!collide(current.x + 1, current.y, current.shape)) current.x++;
+      e.preventDefault();
+      break;
+    case 'ArrowDown':
+      drop();
+      e.preventDefault();
+      break;
+    case 'ArrowUp':
+      tryRotate();
+      e.preventDefault();
+      break;
+    case ' ':
+      hardDrop();
+      e.preventDefault();
+      break;
+  }
+});
+
+restart();
+</script>
+</body>
+</html>

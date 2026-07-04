@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "suishouji",
+      "runtimeExecutable": "node",
+      "runtimeArgs": [".claude/static-server.cjs"],
+      "port": 4321
+    }
+  ]
+}

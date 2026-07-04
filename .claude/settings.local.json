@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(py --version)",
+      "PowerShell($n=\\(Get-Command node -ErrorAction SilentlyContinue\\); if\\($n\\){\"node: \"+\\(node --version\\)}else{\"node: missing\"}; $p=\\(Get-Command python -ErrorAction SilentlyContinue\\); if\\($p\\){\"python: \"+\\(python --version\\)}else{\"python: missing\"}; $py=\\(Get-Command py -ErrorAction SilentlyContinue\\); if\\($py\\){\"py: present\"}else{\"py: missing\"}; $npx=\\(Get-Command npx -ErrorAction SilentlyContinue\\); if\\($npx\\){\"npx: present\"}else{\"npx: missing\"})",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(node \".claude/generate-icons.cjs\")",
+      "PowerShell(node \".claude\\\\generate-icons.cjs\" 2>&1)"
+    ]
+  }
+}
