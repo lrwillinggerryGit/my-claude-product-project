@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>财务管家 - 财务概览</title>
+<!-- Tailwind CSS CDN with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'sakura-bg': '#fff7f9',
+            'sakura-pink': '#ff9ec4',
+            'sakura-pink-light': '#ffeff6',
+            'sakura-sidebar': '#ffffff',
+            'sakura-accent': '#f472b6',
+            'text-main': '#1a1a1a',
+            'text-muted': '#8c8c8c'
+          },
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
+          },
+          borderRadius: {
+            'sakura': '24px',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="layout">
+    body {
+      background-color: #fff7f9;
+      color: #1a1a1a;
+      overflow-x: hidden;
+    }
+    .sidebar-active {
+      background-color: #fff1f6;
+      color: #ff9ec4;
+      border-right: 4px solid #ff9ec4;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e5e7eb;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex">
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-64 bg-white flex flex-col border-r border-pink-50 fixed h-full z-20" data-purpose="navigation-sidebar">
+<div class="p-8">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-8 h-8 bg-pink-100 rounded-lg flex items-center justify-center">
+<div class="w-4 h-4 bg-sakura-pink rounded-sm"></div>
+</div>
+<h1 class="text-xl font-bold text-gray-800">财务管家</h1>
+</div>
+<p class="text-xs text-text-muted ml-11">您的个人财务助手</p>
+</div>
+<nav class="flex-1 mt-4">
+<ul class="space-y-2">
+<li>
+<a class="sidebar-active flex items-center gap-4 px-8 py-4 font-medium transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            首页
+          </a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-8 py-4 text-text-muted font-medium hover:bg-pink-50 transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            交易
+          </a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-8 py-4 text-text-muted font-medium hover:bg-pink-50 transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            统计
+          </a>
+</li>
+<li>
+<a class="flex items-center gap-4 px-8 py-4 text-text-muted font-medium hover:bg-pink-50 transition-colors" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            设置
+          </a>
+</li>
+</ul>
+</nav>
+<div class="p-6">
+<button class="w-full py-4 bg-gradient-to-r from-pink-200 to-purple-200 text-gray-800 rounded-full font-bold shadow-sm hover:shadow-md transition-all flex items-center justify-center gap-2">
+<span class="text-xl">+</span>
+        快速记账
+      </button>
+</div>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-1 ml-64 p-10 bg-sakura-bg min-h-screen">
+<!-- BEGIN: HeaderSection -->
+<header class="flex justify-between items-center mb-10" data-purpose="top-bar">
+<div class="relative w-96">
+<span class="absolute inset-y-0 left-4 flex items-center text-gray-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</span>
+<input class="w-full pl-12 pr-4 py-3 bg-white border-none rounded-2xl shadow-sm focus:ring-2 focus:ring-sakura-pink transition-all text-sm" placeholder="搜索交易明细..." type="text"/>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-gray-400 hover:text-sakura-pink transition-colors">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<button class="text-gray-400 hover:text-sakura-pink transition-colors">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</button>
+<div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm cursor-pointer">
+<img alt="User Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBESo4B-bi-0185eLJKr06yVsDnszmxafFYg3E0k0NK8bKw-evVsFJBKdrvVdpBj0NaEd_py91TON4xlAc_gm_paL0jlj23DiMfUAK89zZLinNJ9t94QkAYdhjU3iF7qO1nbx-qwq9gmH_bM2WoTfLlRrApCIOsJeazEelVowClIXCZ2A17SLrw8RCZI8qbDdKYfCZERMhvkykm1fb6Ar8XsDgAT6kIhHIQV1pC5MyVNEcTgylFXMyXr7ZlYvuHjISrizwqpVY6hos"/>
+</div>
+</div>
+</header>
+<!-- END: HeaderSection -->
+<div class="mb-10">
+<h2 class="text-3xl font-bold text-gray-800 mb-2">财务概览</h2>
+<p class="text-text-muted">欢迎回来，今天的财务状况看起来很健康。</p>
+</div>
+<!-- BEGIN: TopOverviewCards -->
+<div class="grid grid-cols-2 gap-8 mb-10">
+<!-- Income Card -->
+<div class="bg-white p-8 rounded-sakura shadow-sm border border-pink-50 relative overflow-hidden" data-purpose="income-summary">
+<div class="absolute top-0 right-0 p-4 opacity-5">
+<svg class="w-32 h-32" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" fill-rule="evenodd"></path></svg>
+</div>
+<div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-500 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 14l-7 7m0 0l-7-7m7 7V3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="text-sm text-text-muted mb-1">本月总收入</div>
+<div class="text-4xl font-bold text-green-500 mb-6">¥8,420.00</div>
+<div class="text-xs text-text-muted">上月同期: ¥7,200.00</div>
+</div>
+<!-- Expense Card -->
+<div class="bg-white p-8 rounded-sakura shadow-sm border border-pink-50 relative overflow-hidden" data-purpose="expense-summary">
+<div class="absolute top-0 right-0 p-4 opacity-5 text-red-500">
+<svg class="w-32 h-32" fill="currentColor" viewbox="0 0 20 20"><path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z" fill-rule="evenodd"></path></svg>
+</div>
+<div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-red-500 mb-6">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div class="text-sm text-text-muted mb-1">本月总支出</div>
+<div class="text-4xl font-bold text-red-500 mb-6">¥3,150.00</div>
+<div class="text-xs text-text-muted">上月同期: ¥3,400.00</div>
+</div>
+</div>
+<!-- END: TopOverviewCards -->
+<!-- BEGIN: DetailedSection -->
+<div class="grid grid-cols-3 gap-8">
+<!-- BEGIN: TransactionList -->
+<div class="col-span-2 bg-white p-8 rounded-sakura shadow-sm border border-pink-50" data-purpose="transaction-details">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-xl font-bold text-gray-800">最近交易明细</h3>
+<a class="text-sm text-sakura-pink font-medium hover:underline" href="#">查看全部</a>
+</div>
+<div class="space-y-6">
+<!-- Item 1 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center text-purple-500">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div class="font-bold text-gray-800">全食超市</div>
+<div class="text-xs text-text-muted flex items-center gap-2">
+<span>10月24日, 2023</span>
+<span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+<span class="flex items-center gap-1">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path clip-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" fill-rule="evenodd"></path></svg>
+                    支付宝
+                  </span>
+</div>
+</div>
+</div>
+<div class="text-red-500 font-bold">- ¥142.50</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center text-sakura-pink">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div class="font-bold text-gray-800">工资入账</div>
+<div class="text-xs text-text-muted flex items-center gap-2">
+<span>10月22日, 2023</span>
+<span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+<span class="flex items-center gap-1">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path clip-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" fill-rule="evenodd"></path></svg>
+                    大通银行
+                  </span>
+</div>
+</div>
+</div>
+<div class="text-green-500 font-bold">+ ¥4,200.00</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-500">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M5 10l7-7m0 0l7 7m-7-7v18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div class="font-bold text-gray-800">优步打车</div>
+<div class="text-xs text-text-muted flex items-center gap-2">
+<span>10月21日, 2023</span>
+<span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+<span class="flex items-center gap-1">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path clip-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" fill-rule="evenodd"></path></svg>
+                    现金
+                  </span>
+</div>
+</div>
+</div>
+<div class="text-red-500 font-bold">- ¥24.80</div>
+</div>
+<!-- Item 4 -->
+<div class="flex items-center justify-between group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-500">
+<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</div>
+<div>
+<div class="font-bold text-gray-800">苹果直营店</div>
+<div class="text-xs text-text-muted flex items-center gap-2">
+<span>10月20日, 2023</span>
+<span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+<span class="flex items-center gap-1">
+<svg class="w-3 h-3" fill="currentColor" viewbox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"></path><path clip-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" fill-rule="evenodd"></path></svg>
+                    苹果卡
+                  </span>
+</div>
+</div>
+</div>
+<div class="text-red-500 font-bold">- ¥99.00</div>
+</div>
+</div>
+</div>
+<!-- END: TransactionList -->
+<!-- BEGIN: CategorySplit -->
+<div class="bg-white p-8 rounded-sakura shadow-sm border border-pink-50 flex flex-col" data-purpose="category-breakdown">
+<h3 class="text-xl font-bold text-gray-800 mb-8">支出分类占比</h3>
+<div class="space-y-8 flex-1">
+<!-- Cat 1 -->
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="text-gray-600">餐饮美食</span>
+<span class="font-bold text-gray-800">45%</span>
+</div>
+<div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+<div class="bg-purple-400 h-full w-[45%]"></div>
+</div>
+</div>
+<!-- Cat 2 -->
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="text-gray-600">交通出行</span>
+<span class="font-bold text-gray-800">20%</span>
+</div>
+<div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+<div class="bg-blue-400 h-full w-[20%]"></div>
+</div>
+</div>
+<!-- Cat 3 -->
+<div>
+<div class="flex justify-between text-sm mb-2">
+<span class="text-gray-600">休闲娱乐</span>
+<span class="font-bold text-gray-800">15%</span>
+</div>
+<div class="w-full bg-gray-100 h-2 rounded-full overflow-hidden">
+<div class="bg-pink-400 h-full w-[15%]"></div>
+</div>
+</div>
+</div>
+<!-- Donut Chart Illustration -->
+<div class="mt-8 flex justify-center relative">
+<svg class="w-32 h-32 transform -rotate-90">
+<circle cx="64" cy="64" fill="transparent" r="50" stroke="#f3f4f6" stroke-width="12"></circle>
+<circle cx="64" cy="64" fill="transparent" r="50" stroke="#c084fc" stroke-dasharray="314" stroke-dashoffset="172" stroke-linecap="round" stroke-width="12"></circle>
+<circle class="transform rotate-[160deg] origin-center" cx="64" cy="64" fill="transparent" r="50" stroke="#60a5fa" stroke-dasharray="314" stroke-dashoffset="250" stroke-linecap="round" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-xs text-text-muted">总计</span>
+<span class="text-lg font-bold">¥3,150</span>
+</div>
+</div>
+</div>
+<!-- END: CategorySplit -->
+</div>
+<!-- END: DetailedSection -->
+</main>
+<!-- END: MainContent -->
+</body></html>

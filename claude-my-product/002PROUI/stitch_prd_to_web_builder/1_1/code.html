@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>财务管家 - 注册账号</title>
+<!-- Tailwind CSS v3 CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              light: '#ff9ec4',
+              DEFAULT: '#ff9ec4',
+              dark: '#e1d7e4',
+            },
+            surface: {
+              DEFAULT: '#fff7fe',
+              dim: '#e1d7e4',
+              container: '#fbf0fe',
+            }
+          },
+          borderRadius: {
+            'card': '24px',
+            'input': '12px',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-gradients">
+    /* Background radial gradient matching the reference */
+    body {
+      background: radial-gradient(circle at center, #fff7fe 0%, #f7e8f5 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CTA Button Gradient */
+    .btn-gradient {
+      background: linear-gradient(90deg, #ffb1cc 0%, #d4b5ec 100%);
+      transition: opacity 0.2s ease;
+    }
+    .btn-gradient:hover {
+      opacity: 0.9;
+    }
+
+    /* Input focus and soft shadow */
+    .input-field {
+      background-color: #f8f8f8;
+      border: 1px solid #eee;
+      transition: all 0.2s ease;
+    }
+    .input-field:focus-within {
+      border-color: #ff9ec4;
+      box-shadow: 0 0 0 4px rgba(255, 158, 196, 0.1);
+    }
+
+    /* Custom scrollbar just in case */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #e1d7e4;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-gray-800 p-4">
+<!-- BEGIN: Branding -->
+<div class="flex flex-col items-center mb-8" data-purpose="logo-header">
+<div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4">
+<!-- Icon representation of the money bag -->
+<div class="text-3xl">💰</div>
+</div>
+<h1 class="text-3xl font-bold tracking-widest text-[#ff9ec4]">财务管家</h1>
+</div>
+<!-- END: Branding -->
+<!-- BEGIN: RegistrationCard -->
+<main class="w-full max-w-[500px] bg-white rounded-card shadow-2xl p-10 md:p-14" data-purpose="registration-form-container">
+<header class="mb-8">
+<h2 class="text-2xl font-bold text-gray-900 mb-2">注册账号</h2>
+<p class="text-gray-500 text-sm">加入财务管家，开启智能理财之旅</p>
+</header>
+<form action="#" class="space-y-6" method="POST">
+<!-- Username Field -->
+<div class="space-y-2">
+<label class="text-sm font-semibold text-gray-700 block" for="username">用户名</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<svg class="h-5 w-5 text-gray-400" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<input class="input-field block w-full pl-11 pr-4 py-4 rounded-input border-none text-gray-900 placeholder-gray-400 focus:ring-0" id="username" name="username" placeholder="请输入您的用户名" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<label class="text-sm font-semibold text-gray-700 block" for="password">设置密码</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<svg class="h-5 w-5 text-gray-400" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<input class="input-field block w-full pl-11 pr-12 py-4 rounded-input border-none text-gray-900 placeholder-gray-400 focus:ring-0" id="password" name="password" placeholder="请输入登录密码" type="password"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600" data-purpose="toggle-password" type="button">
+<svg class="h-6 w-6" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Confirm Password Field -->
+<div class="space-y-2">
+<label class="text-sm font-semibold text-gray-700 block" for="confirm-password">确认密码</label>
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<input class="input-field block w-full pl-11 pr-4 py-4 rounded-input border-none text-gray-900 placeholder-gray-400 focus:ring-0" id="confirm-password" name="confirm-password" placeholder="请再次输入登录密码" type="password"/>
+</div>
+</div>
+<!-- Terms Checkbox -->
+<div class="flex items-center space-x-2 py-2">
+<input class="h-5 w-5 rounded border-gray-300 text-brand focus:ring-brand-light cursor-pointer" id="terms" name="terms" type="checkbox"/>
+<label class="text-sm text-gray-600" for="terms">
+          我已阅读并同意 <a class="text-[#a16207] hover:underline font-medium" href="#">服务协议</a> 与 <a class="text-[#a16207] hover:underline font-medium" href="#">隐私政策</a>
+</label>
+</div>
+<!-- Submit Button -->
+<button class="w-full btn-gradient py-4 rounded-full text-white font-bold text-lg shadow-lg transform active:scale-[0.98]" type="submit">
+        立即注册
+      </button>
+<!-- Bottom Link -->
+<div class="text-center pt-4">
+<p class="text-gray-500 text-sm">
+          已有账号？ <a class="text-[#a16207] font-bold hover:underline" href="#">立即登录</a>
+</p>
+</div>
+</form>
+</main>
+<!-- END: RegistrationCard -->
+<!-- BEGIN: TrustBadges -->
+<footer class="mt-12 w-full max-w-[500px]" data-purpose="footer-trust-badges">
+<div class="flex justify-around items-start">
+<!-- Encryption -->
+<div class="flex flex-col items-center group">
+<div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mb-2 group-hover:bg-brand-light transition-colors">
+<svg class="h-5 w-5 text-gray-500 group-hover:text-white" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 4.946-2.597 9.29-6.505 11.729l-.095.06a.75.75 0 01-.8 0l-.095-.06C6.597 16.29 4 11.946 4 7c0-.68.056-1.35.166-2.001zm11.538 3.03a.75.75 0 00-1.06-1.06l-4.47 4.47-1.405-1.406a.75.75 0 10-1.061 1.06l1.936 1.935a.75.75 0 001.06 0l5-5z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<span class="text-xs text-gray-400">银行级加密</span>
+</div>
+<!-- Compliance -->
+<div class="flex flex-col items-center group">
+<div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mb-2 group-hover:bg-brand-light transition-colors">
+<svg class="h-5 w-5 text-gray-500 group-hover:text-white" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<span class="text-xs text-gray-400">合规存管</span>
+</div>
+<!-- Sync -->
+<div class="flex flex-col items-center group">
+<div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center mb-2 group-hover:bg-brand-light transition-colors">
+<svg class="h-5 w-5 text-gray-500 group-hover:text-white" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+<span class="text-xs text-gray-400">实时同步</span>
+</div>
+</div>
+</footer>
+<!-- END: TrustBadges -->
+<script data-purpose="event-handlers">
+    // Simple toggle logic for the password visibility
+    const toggleBtn = document.querySelector('[data-purpose="toggle-password"]');
+    const passwordInput = document.getElementById('password');
+
+    if (toggleBtn && passwordInput) {
+      toggleBtn.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+      });
+    }
+  </script>
+</body></html>

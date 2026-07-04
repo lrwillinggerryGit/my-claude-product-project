@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"C:\\\\Users\\\\lrwillinggerry\\\\Desktop\\\\ClaudeCodeDemo2\\\\claude-my-product\\\\003frontend\\\\\")",
+      "Bash(git --version)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(command -v git)",
+      "Bash(echo \"WHICH_EXIT=$?\")",
+      "Bash(git -C \"C:/Users/lrwillinggerry/Desktop/ClaudeCodeDemo2\" rev-parse --is-inside-work-tree)",
+      "PowerShell($g = Get-Command git -ErrorAction SilentlyContinue; if \\($g\\) { \"git found at: $\\($g.Source\\)\"; git --version } else { \"git NOT found in PATH\" })"
+    ]
+  }
+}

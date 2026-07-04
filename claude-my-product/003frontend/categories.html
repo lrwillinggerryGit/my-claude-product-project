@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>财务管家 — 分类管理</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans:['"Plus Jakarta Sans"','system-ui','sans-serif'] },
+          colors: { sakura:{ DEFAULT:'#FF9EC4', bg:'#FFF8FB' } },
+          borderRadius: { sakura:'16px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background:linear-gradient(135deg,#F9A8C2 0%,#F47FA8 50%,#F58FB0 100%); background-attachment:fixed; }
+    .nav-link { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:12px; color:rgba(255,255,255,.8); font-weight:500; font-size:.9rem; transition:all .15s; text-decoration:none; }
+    .nav-link:hover { background:rgba(255,255,255,.18); color:#fff; }
+    .nav-link.active { background:rgba(255,255,255,.28); color:#fff; font-weight:700; }
+    .btn-grad { background:linear-gradient(135deg,#FF9EC4 0%,#c084fc 100%); }
+    .scrollbar-hide::-webkit-scrollbar { display:none; }
+    .type-btn { flex:1; padding:8px; border-radius:9999px; font-size:.8rem; font-weight:600; transition:all .15s; }
+    .type-btn.active-exp { background:#8e5b6a; color:#fff; }
+    .type-btn.active-inc { background:#3DBE8B; color:#fff; }
+    .emoji-cell { height:38px; border-radius:10px; font-size:1.25rem; transition:all .12s; }
+    .emoji-cell:hover { background:#FFF1F6; }
+    .emoji-cell.sel { background:#FFE3EF; outline:2px solid #FF9EC4; }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden font-sans">
+
+  <!-- Sidebar -->
+  <aside class="w-60 bg-white/10 backdrop-blur-xl flex flex-col py-8 flex-shrink-0">
+    <div class="px-6 mb-10 flex items-center gap-3">
+      <div class="w-9 h-9 bg-white/25 rounded-xl flex items-center justify-center text-white text-base">💰</div>
+      <div>
+        <div class="font-bold text-white text-sm leading-tight drop-shadow">财务管家</div>
+        <div class="text-xs text-white/70">管理您的每一分钱</div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 space-y-1">
+      <a href="dashboard.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        首页
+      </a>
+      <a href="transactions.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        交易
+      </a>
+      <a href="analytics.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        统计
+      </a>
+      <a href="settings.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        设置
+      </a>
+    </nav>
+    <div class="px-4 mt-4">
+      <a href="new-entry.html" class="btn-grad block text-center text-white font-bold py-3.5 rounded-full shadow-lg text-sm">+ 快速记账</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <header class="flex items-center justify-between px-10 py-5 bg-white/10 backdrop-blur-xl">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">分类管理</h2>
+        <p class="text-sm text-gray-500">管理收入与支出的分类，支持表情图标</p>
+      </div>
+      <a href="new-entry.html" class="text-sm text-gray-500 hover:text-sakura transition-colors flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        返回记账
+      </a>
+    </header>
+
+    <div class="flex-1 overflow-y-auto scrollbar-hide px-10 py-8 space-y-6">
+      <!-- Toolbar: type toggle + add -->
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div class="bg-white p-1 rounded-full flex gap-1 w-48 border border-gray-100">
+          <button id="btnExp" class="type-btn active-exp" onclick="switchType('expense')">支出</button>
+          <button id="btnInc" class="type-btn text-gray-400" onclick="switchType('income')">收入</button>
+        </div>
+        <button onclick="openAdd()" class="btn-grad px-6 py-2.5 rounded-full text-white text-sm font-bold shadow-lg flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+          新增分类
+        </button>
+      </div>
+
+      <!-- Category grid -->
+      <div id="catGrid" class="grid grid-cols-3 md:grid-cols-5 gap-4"></div>
+    </div>
+  </main>
+
+  <!-- Add/Edit modal -->
+  <div id="catModal" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+    <div class="bg-white rounded-3xl p-7 w-full max-w-md shadow-2xl">
+      <div class="flex items-center justify-between mb-5">
+        <h3 id="modalTitle" class="font-bold text-gray-800 text-lg">新增分类</h3>
+        <button onclick="closeModal()" class="text-gray-300 hover:text-gray-500 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        </button>
+      </div>
+
+      <!-- Preview -->
+      <div class="flex flex-col items-center mb-5">
+        <div id="emojiPreview" class="w-20 h-20 rounded-full bg-pink-50 flex items-center justify-center text-4xl mb-2">🍜</div>
+        <span class="text-xs text-gray-400">当前图标</span>
+      </div>
+
+      <!-- Name -->
+      <label class="text-sm font-semibold text-gray-600 block mb-1.5">分类名称</label>
+      <input id="catName" type="text" maxlength="8" placeholder="如：餐饮、工资"
+        class="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-pink-200 outline-none"/>
+      <p id="nameErr" class="text-xs text-rose-400 mt-1.5 hidden">请输入分类名称</p>
+
+      <!-- Emoji picker -->
+      <label class="text-sm font-semibold text-gray-600 block mt-4 mb-2">选择表情</label>
+      <div id="emojiGrid" class="grid grid-cols-8 gap-1.5 max-h-44 overflow-y-auto scrollbar-hide mb-6 p-1"></div>
+
+      <!-- Actions -->
+      <div class="flex gap-3">
+        <button onclick="closeModal()" class="flex-1 py-3 border border-gray-100 rounded-2xl text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
+        <button onclick="submitCat()" class="flex-1 py-3 btn-grad rounded-2xl text-white text-sm font-bold shadow-sm">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirm modal -->
+  <div id="delModal" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+    <div class="bg-white rounded-3xl p-7 max-w-sm w-full shadow-2xl">
+      <h3 class="font-bold text-gray-800 text-lg mb-2">删除分类</h3>
+      <p id="delText" class="text-sm text-gray-400 mb-6">确定要删除这个分类吗？</p>
+      <div class="flex gap-3">
+        <button onclick="closeDel()" class="flex-1 py-3 border border-gray-100 rounded-2xl text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
+        <button onclick="confirmDel()" class="flex-1 py-3 bg-rose-400 hover:bg-rose-500 rounded-2xl text-white text-sm font-bold transition-colors">删除</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORE_KEY = 'suishouji_categories_v1';
+    const EMOJIS = ['🍜','🍔','🍱','🍎','🥦','☕','🍺','🛒','👕','👟','🎁','💄','🚌','🚖','🚗','✈️','⛽','🏠','🏡','💡','💧','📱','📺','🎬','🎮','🎵','📚','🎓','💊','🏥','💪','🐱','🐶','💝','🌸','🎀','💰','💵','💳','🧧','📈','💼','🛠️','🧾','🏦','🎉','⭐','❤️'];
+    const DEFAULTS = {
+      expense: [
+        {emoji:'🍜',name:'餐饮'},{emoji:'🛒',name:'购物'},{emoji:'🚌',name:'交通'},
+        {emoji:'🏠',name:'居家'},{emoji:'🏡',name:'房租'},{emoji:'🎬',name:'娱乐'},
+        {emoji:'💊',name:'医疗'},{emoji:'📚',name:'教育'},{emoji:'📱',name:'通讯'},{emoji:'💝',name:'人情'}
+      ],
+      income: [
+        {emoji:'💰',name:'工资'},{emoji:'💼',name:'劳务'},{emoji:'🧧',name:'外快'},
+        {emoji:'📈',name:'投资'},{emoji:'🎁',name:'红包'}
+      ]
+    };
+
+    let data = load();
+    let currentType = 'expense';
+    let editingId = null;
+    let pendingDelId = null;
+    let selectedEmoji = EMOJIS[0];
+
+    function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+    function load(){
+      try {
+        const raw = localStorage.getItem(STORE_KEY);
+        if (raw) {
+          const d = JSON.parse(raw);
+          if (d && Array.isArray(d.expense) && Array.isArray(d.income)) return d;
+        }
+      } catch (e) {}
+      const seed = {
+        expense: DEFAULTS.expense.map(c => ({ id: uid(), ...c })),
+        income:  DEFAULTS.income.map(c => ({ id: uid(), ...c })),
+      };
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(seed)); } catch (e) {}
+      return seed;
+    }
+    function save(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch (e) {} }
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    function switchType(t){
+      currentType = t;
+      document.getElementById('btnExp').className = 'type-btn ' + (t === 'expense' ? 'active-exp' : 'text-gray-400');
+      document.getElementById('btnInc').className = 'type-btn ' + (t === 'income' ? 'active-inc' : 'text-gray-400');
+      render();
+    }
+
+    function render(){
+      const list = data[currentType];
+      const grid = document.getElementById('catGrid');
+      const cards = list.map(c => `
+        <div class="group relative bg-white rounded-2xl p-4 flex flex-col items-center gap-2 shadow-sm border border-pink-50">
+          <div class="w-14 h-14 rounded-full bg-pink-50 flex items-center justify-center text-2xl">${c.emoji}</div>
+          <span class="text-sm font-medium text-gray-700 truncate max-w-full">${escapeHtml(c.name)}</span>
+          <div class="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            <button onclick="openEdit('${c.id}')" title="编辑" class="w-6 h-6 rounded-full bg-gray-50 hover:bg-pink-100 flex items-center justify-center text-gray-400 hover:text-sakura transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            </button>
+            <button onclick="askDelete('${c.id}')" title="删除" class="w-6 h-6 rounded-full bg-gray-50 hover:bg-red-100 flex items-center justify-center text-gray-400 hover:text-rose-400 transition-colors">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            </button>
+          </div>
+        </div>`).join('');
+      const addTile = `
+        <button onclick="openAdd()" class="rounded-2xl p-4 flex flex-col items-center justify-center gap-2 border-2 border-dashed border-pink-200 text-sakura hover:bg-pink-50/60 transition-colors min-h-[116px]">
+          <div class="w-14 h-14 rounded-full bg-pink-50 flex items-center justify-center text-2xl">＋</div>
+          <span class="text-sm font-medium">添加分类</span>
+        </button>`;
+      grid.innerHTML = cards + addTile;
+    }
+
+    function renderEmojiGrid(){
+      document.getElementById('emojiGrid').innerHTML = EMOJIS.map(e =>
+        `<button type="button" onclick="pickEmoji('${e}')" data-emoji="${e}" class="emoji-cell ${e === selectedEmoji ? 'sel' : ''}">${e}</button>`
+      ).join('');
+    }
+    function pickEmoji(e){
+      selectedEmoji = e;
+      document.getElementById('emojiPreview').textContent = e;
+      document.querySelectorAll('#emojiGrid .emoji-cell').forEach(b => b.classList.toggle('sel', b.dataset.emoji === e));
+    }
+
+    function openAdd(){
+      editingId = null;
+      selectedEmoji = EMOJIS[0];
+      document.getElementById('modalTitle').textContent = '新增分类';
+      document.getElementById('catName').value = '';
+      document.getElementById('nameErr').classList.add('hidden');
+      document.getElementById('emojiPreview').textContent = selectedEmoji;
+      renderEmojiGrid();
+      showModal();
+    }
+    function openEdit(id){
+      const c = data[currentType].find(x => x.id === id);
+      if (!c) return;
+      editingId = id;
+      selectedEmoji = c.emoji;
+      document.getElementById('modalTitle').textContent = '编辑分类';
+      document.getElementById('catName').value = c.name;
+      document.getElementById('nameErr').classList.add('hidden');
+      document.getElementById('emojiPreview').textContent = selectedEmoji;
+      renderEmojiGrid();
+      showModal();
+    }
+    function showModal(){
+      document.getElementById('catModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('catName').focus(), 50);
+    }
+    function closeModal(){ document.getElementById('catModal').classList.add('hidden'); }
+
+    function submitCat(){
+      const name = document.getElementById('catName').value.trim();
+      if (!name) { document.getElementById('nameErr').classList.remove('hidden'); return; }
+      if (editingId) {
+        const c = data[currentType].find(x => x.id === editingId);
+        if (c) { c.name = name; c.emoji = selectedEmoji; }
+      } else {
+        data[currentType].push({ id: uid(), emoji: selectedEmoji, name });
+      }
+      save(); render(); closeModal();
+    }
+
+    function askDelete(id){
+      const c = data[currentType].find(x => x.id === id);
+      if (!c) return;
+      pendingDelId = id;
+      document.getElementById('delText').textContent = `确定要删除分类「${c.name}」吗？此操作不可撤销。`;
+      document.getElementById('delModal').classList.remove('hidden');
+    }
+    function closeDel(){ pendingDelId = null; document.getElementById('delModal').classList.add('hidden'); }
+    function confirmDel(){
+      if (pendingDelId) {
+        data[currentType] = data[currentType].filter(x => x.id !== pendingDelId);
+        save(); render();
+      }
+      closeDel();
+    }
+
+    // Init
+    switchType('expense');
+    document.getElementById('catModal').addEventListener('click', function(e){ if (e.target === this) closeModal(); });
+    document.getElementById('delModal').addEventListener('click', function(e){ if (e.target === this) closeDel(); });
+    document.getElementById('catName').addEventListener('keydown', function(e){ if (e.key === 'Enter') submitCat(); });
+  </script>
+</body>
+</html>

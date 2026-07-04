@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>财务管家 — 设置</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans:['"Plus Jakarta Sans"','system-ui','sans-serif'] },
+          colors: { sakura:{ DEFAULT:'#FF9EC4', bg:'#FFF8FB' } },
+          borderRadius: { sakura:'16px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background:linear-gradient(135deg,#F9A8C2 0%,#F47FA8 50%,#F58FB0 100%); background-attachment:fixed; }
+    .nav-link { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:12px; color:rgba(255,255,255,.8); font-weight:500; font-size:.9rem; transition:all .15s; text-decoration:none; }
+    .nav-link:hover { background:rgba(255,255,255,.18); color:#fff; }
+    .nav-link.active { background:rgba(255,255,255,.28); color:#fff; font-weight:700; }
+    .btn-grad { background:linear-gradient(135deg,#FF9EC4 0%,#c084fc 100%); }
+    .scrollbar-hide::-webkit-scrollbar { display:none; }
+    /* Toggle switch */
+    .switch { position:relative; display:inline-block; width:42px; height:23px; }
+    .switch input { opacity:0; width:0; height:0; }
+    .slider { position:absolute; cursor:pointer; inset:0; background:#E5E7EB; transition:.3s; border-radius:23px; }
+    .slider::before { position:absolute; content:""; height:17px; width:17px; left:3px; bottom:3px; background:#fff; transition:.3s; border-radius:50%; }
+    input:checked + .slider { background:#FF9EC4; }
+    input:checked + .slider::before { transform:translateX(19px); }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden font-sans">
+
+  <!-- Sidebar -->
+  <aside class="w-60 bg-white/10 backdrop-blur-xl flex flex-col py-8 flex-shrink-0">
+    <div class="px-6 mb-10 flex items-center gap-3">
+      <div class="w-9 h-9 bg-white/25 rounded-xl flex items-center justify-center text-white text-base">💰</div>
+      <div>
+        <div class="font-bold text-white text-sm leading-tight drop-shadow">财务管家</div>
+        <div class="text-xs text-white/70">管理您的每一分钱</div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 space-y-1">
+      <a href="dashboard.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        首页
+      </a>
+      <a href="transactions.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        交易
+      </a>
+      <a href="analytics.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        统计
+      </a>
+      <a href="settings.html" class="nav-link active">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        设置
+      </a>
+    </nav>
+    <div class="px-4 mt-4">
+      <a href="new-entry.html" class="btn-grad block text-center text-white font-bold py-3.5 rounded-full shadow-lg text-sm">+ 快速记账</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <header class="flex items-center justify-between px-10 py-5 bg-white/10 backdrop-blur-xl">
+      <h2 class="text-2xl font-bold text-gray-800">设置</h2>
+    </header>
+
+    <div class="flex-1 overflow-y-auto scrollbar-hide px-10 py-8 space-y-8">
+
+      <!-- Profile section -->
+      <div class="grid grid-cols-12 gap-6">
+        <!-- Avatar -->
+        <div class="col-span-4 bg-pink-50 rounded-3xl p-8 flex flex-col items-center justify-center">
+          <div class="relative w-24 h-24 mb-3">
+            <div onclick="document.getElementById('avatarInput').click()"
+              class="w-24 h-24 rounded-full bg-white border-4 border-white shadow-sm flex items-center justify-center text-5xl overflow-hidden cursor-pointer">
+              <span id="avatarEmoji">🐱</span>
+              <img id="avatarImg" class="w-full h-full object-cover hidden" alt="用户头像"/>
+            </div>
+            <button onclick="document.getElementById('avatarInput').click()"
+              class="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full border border-gray-100 flex items-center justify-center shadow-sm text-gray-400 hover:text-sakura transition-colors">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            </button>
+          </div>
+          <button onclick="document.getElementById('avatarInput').click()" class="text-sm font-medium text-sakura hover:underline">修改头像</button>
+          <input id="avatarInput" type="file" accept="image/*" class="hidden" onchange="handleAvatarChange(event)"/>
+          <p class="text-base font-bold text-gray-800 mt-2">林悦</p>
+          <p class="text-xs text-gray-400">个人账户</p>
+        </div>
+
+        <!-- Profile form -->
+        <div class="col-span-8 bg-pink-50 rounded-3xl p-8 space-y-5">
+          <div class="grid grid-cols-2 gap-5">
+            <div>
+              <label class="text-xs font-bold text-gray-500 block mb-2">昵称</label>
+              <input type="text" value="林悦" class="w-full bg-white border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-pink-200 text-gray-800"/>
+            </div>
+            <div>
+              <label class="text-xs font-bold text-gray-500 block mb-2">性别</label>
+              <select class="w-full bg-white border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-pink-200 text-gray-800 appearance-none">
+                <option>女</option><option>男</option><option>保密</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="text-xs font-bold text-gray-500 block mb-2">个性签名</label>
+            <textarea class="w-full bg-white border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-pink-200 text-gray-800 resize-none" rows="3">悦享生活，理财有道。</textarea>
+          </div>
+          <button class="px-6 py-2.5 btn-grad text-white text-sm font-bold rounded-full shadow-sm">保存资料</button>
+        </div>
+      </div>
+
+      <!-- Payment accounts -->
+      <section>
+        <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+          <svg class="w-5 h-5 text-sakura" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+          支付账户管理
+        </h3>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-pink-50 p-5 rounded-2xl flex items-center gap-4 relative group">
+            <div class="w-11 h-11 bg-green-100 rounded-xl flex items-center justify-center text-xl">💬</div>
+            <div><p class="font-bold text-gray-800 text-sm">微信支付</p><p class="text-xs text-gray-400">已绑定</p></div>
+            <button class="absolute top-4 right-4 text-xs text-sakura font-medium opacity-0 group-hover:opacity-100 transition-opacity hover:underline">编辑</button>
+          </div>
+          <div class="bg-pink-50 p-5 rounded-2xl flex items-center gap-4 relative group">
+            <div class="w-11 h-11 bg-blue-100 rounded-xl flex items-center justify-center text-xl">💳</div>
+            <div><p class="font-bold text-gray-800 text-sm">支付宝</p><p class="text-xs text-gray-400">已绑定</p></div>
+            <button class="absolute top-4 right-4 text-xs text-sakura font-medium opacity-0 group-hover:opacity-100 transition-opacity hover:underline">编辑</button>
+          </div>
+          <div class="bg-pink-50 p-5 rounded-2xl flex items-center gap-4 relative group">
+            <div class="w-11 h-11 bg-red-100 rounded-xl flex items-center justify-center text-xl">🏦</div>
+            <div><p class="font-bold text-gray-800 text-sm">招商银行卡</p><p class="text-xs text-gray-400">尾号 8888</p></div>
+            <button class="absolute top-4 right-4 text-xs text-sakura font-medium opacity-0 group-hover:opacity-100 transition-opacity hover:underline">编辑</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Security + Preferences -->
+      <div class="grid grid-cols-2 gap-6">
+        <section>
+          <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-sakura" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            安全设置
+          </h3>
+          <div class="bg-pink-50 rounded-3xl p-3 space-y-1">
+            <div class="flex justify-between items-center p-4 hover:bg-white rounded-2xl cursor-pointer transition-colors group">
+              <div class="flex items-center gap-3 text-sm text-gray-700">
+                <svg class="w-5 h-5 text-gray-400 group-hover:text-sakura" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                修改密码
+              </div>
+              <svg class="w-4 h-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            </div>
+            <div class="flex justify-between items-center p-4">
+              <div class="flex items-center gap-3 text-sm text-gray-700">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                指纹/面容解锁
+              </div>
+              <label class="switch"><input type="checkbox" checked/><span class="slider"></span></label>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3 class="font-bold text-gray-800 mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5 text-sakura" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            个性化偏好
+          </h3>
+          <div class="bg-pink-50 rounded-3xl p-3 space-y-1">
+            <div class="flex justify-between items-center p-4">
+              <div class="flex items-center gap-3 text-sm text-gray-700">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                消息提醒
+              </div>
+              <label class="switch"><input type="checkbox" checked/><span class="slider"></span></label>
+            </div>
+            <div class="flex justify-between items-center p-4">
+              <div class="flex items-center gap-3 text-sm text-gray-700">
+                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+                深色模式
+              </div>
+              <label class="switch"><input type="checkbox" id="darkToggle"/><span class="slider"></span></label>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Logout -->
+      <div class="flex justify-center pb-4">
+        <button onclick="handleLogout()"
+          class="px-12 py-3 bg-white/20 backdrop-blur border border-white/60 text-white font-bold rounded-full shadow-sm hover:bg-white/35 transition-all text-sm">
+          退出登录
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Logout confirm modal -->
+  <div id="logoutModal" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center">
+    <div class="bg-white rounded-3xl p-8 max-w-sm w-full mx-6 shadow-2xl">
+      <h3 class="font-bold text-gray-800 text-lg mb-2">确认退出？</h3>
+      <p class="text-sm text-gray-400 mb-6">退出后本地数据仍保留，再次登录即可看到。确认退出？</p>
+      <div class="flex gap-3">
+        <button onclick="closeLogout()" class="flex-1 py-3 border border-gray-100 rounded-2xl text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">取消</button>
+        <a href="login.html" class="flex-1 py-3 btn-grad rounded-2xl text-white text-sm font-bold text-center">确认退出</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // 头像上传（仅前端预览，真正上传需后端对接）
+    function handleAvatarChange(e) {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        alert('请选择图片文件');
+        e.target.value = '';
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        alert('图片不能超过 5MB');
+        e.target.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(ev) {
+        const img = document.getElementById('avatarImg');
+        img.src = ev.target.result;
+        img.classList.remove('hidden');
+        document.getElementById('avatarEmoji').classList.add('hidden');
+        // TODO: 将 ev.target.result / file 提交到后端保存
+      };
+      reader.readAsDataURL(file);
+      e.target.value = ''; // 允许重复选择同一文件
+    }
+
+    function handleLogout() {
+      document.getElementById('logoutModal').classList.remove('hidden');
+    }
+    function closeLogout() {
+      document.getElementById('logoutModal').classList.add('hidden');
+    }
+    document.getElementById('logoutModal').addEventListener('click', function(e) {
+      if (e.target === this) closeLogout();
+    });
+  </script>
+</body>
+</html>

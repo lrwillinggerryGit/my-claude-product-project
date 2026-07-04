@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#FF9EC4" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="随手记" />
+  <title>随手记 · 财务管家记账本</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="64x64" href="favicon-64.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- 字体非阻塞加载：text 先用系统圆体兜底，字体到位后无缝替换，保证首屏 ≤2s（PRD §4.3） -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" media="print" onload="this.media='all'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Fredoka:wght@500;600;700&display=swap" /></noscript>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 手机外框（PC 端居中显示成手机的样子） -->
+  <div class="phone" id="phone">
+
+    <!-- 顶部装饰栏 -->
+    <header class="topbar" id="topbar">
+      <div class="topbar-title" id="topbarTitle">记一笔</div>
+      <div class="topbar-sub" id="topbarSub">打开即记 · 记完即走</div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="screen" id="screen">
+
+      <!-- ============ 记账页 ============ -->
+      <section class="view view-add active" id="view-add">
+        <!-- 收支类型切换 -->
+        <div class="seg" role="tablist">
+          <button class="seg-btn active" data-type="expense" id="segExpense">支出</button>
+          <button class="seg-btn" data-type="income" id="segIncome">收入</button>
+          <span class="seg-thumb" id="segThumb"></span>
+        </div>
+
+        <!-- 分类网格 -->
+        <div class="cat-grid" id="catGrid"></div>
+
+        <!-- 备注 + 日期 -->
+        <div class="meta-row">
+          <label class="meta-note">
+            <span class="meta-ic">📝</span>
+            <input type="text" id="noteInput" maxlength="50" placeholder="加个备注…（选填）" />
+          </label>
+          <button class="meta-date" id="dateBtn">
+            <span class="meta-ic">📅</span>
+            <span id="dateLabel">今天</span>
+            <input type="date" id="dateInput" />
+          </button>
+        </div>
+
+        <!-- 金额显示 + 数字键盘 -->
+        <div class="pad-wrap">
+          <div class="amount-bar">
+            <span class="amount-sign" id="amountSign">-</span>
+            <span class="amount-num" id="amountDisplay">0</span>
+            <span class="amount-cur">¥</span>
+          </div>
+          <div class="keypad" id="keypad">
+            <button class="key" data-k="7">7</button>
+            <button class="key" data-k="8">8</button>
+            <button class="key" data-k="9">9</button>
+            <button class="key key-fn" data-k="back" aria-label="删除">⌫</button>
+            <button class="key" data-k="4">4</button>
+            <button class="key" data-k="5">5</button>
+            <button class="key" data-k="6">6</button>
+            <button class="key key-fn" data-k="clear">C</button>
+            <button class="key" data-k="1">1</button>
+            <button class="key" data-k="2">2</button>
+            <button class="key" data-k="3">3</button>
+            <button class="key key-save" id="saveBtn" rowspan>保存</button>
+            <button class="key key-wide" data-k="0">0</button>
+            <button class="key" data-k=".">.</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 账单页 ============ -->
+      <section class="view view-bills" id="view-bills">
+        <div class="month-card">
+          <div class="month-switch">
+            <button class="msw" id="billPrev" aria-label="上一月">‹</button>
+            <button class="month-label" id="billMonthLabel">2026年6月</button>
+            <button class="msw" id="billNext" aria-label="下一月">›</button>
+          </div>
+          <div class="month-stat">
+            <div class="ms-item"><span class="ms-k">收入</span><b class="ms-v income" id="billIncome">+0</b></div>
+            <div class="ms-item"><span class="ms-k">支出</span><b class="ms-v expense" id="billExpense">-0</b></div>
+            <div class="ms-item"><span class="ms-k">结余</span><b class="ms-v" id="billBalance">0</b></div>
+          </div>
+        </div>
+
+        <div class="bills-tools">
+          <div class="view-seg" id="rangeSeg">
+            <button class="vseg-btn active" data-range="day">日</button>
+            <button class="vseg-btn" data-range="week">周</button>
+            <button class="vseg-btn" data-range="month">月</button>
+          </div>
+          <button class="icon-btn" id="searchToggle" aria-label="筛选">🔍</button>
+        </div>
+
+        <div class="search-panel" id="searchPanel" hidden>
+          <input type="text" id="searchKw" placeholder="搜索备注 / 分类关键词…" />
+          <div class="search-row">
+            <input type="number" id="searchMin" placeholder="最小金额" />
+            <span class="dash">~</span>
+            <input type="number" id="searchMax" placeholder="最大金额" />
+          </div>
+          <div class="search-actions">
+            <button class="ghost-btn" id="searchClear">清除</button>
+            <button class="pill-btn" id="searchApply">应用筛选</button>
+          </div>
+        </div>
+
+        <div class="bill-list" id="billList"></div>
+      </section>
+
+      <!-- ============ 统计页 ============ -->
+      <section class="view view-stats" id="view-stats">
+        <div class="view-seg wide" id="statSeg">
+          <button class="vseg-btn active" data-period="month">本月</button>
+          <button class="vseg-btn" data-period="last">上月</button>
+          <button class="vseg-btn" data-period="year">本年</button>
+        </div>
+
+        <div class="stat-cards">
+          <div class="stat-card">
+            <span class="sc-k">支出</span>
+            <b class="sc-v expense" id="statExpense">0</b>
+            <span class="sc-mom" id="statExpenseMom">—</span>
+          </div>
+          <div class="stat-card">
+            <span class="sc-k">收入</span>
+            <b class="sc-v income" id="statIncome">0</b>
+            <span class="sc-mom" id="statIncomeMom">—</span>
+          </div>
+          <div class="stat-card">
+            <span class="sc-k">结余</span>
+            <b class="sc-v" id="statBalance">0</b>
+            <span class="sc-mom" id="statBalanceMom">&nbsp;</span>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">支出构成 <span class="panel-hint" id="pieHint">点击图例下钻</span></div>
+          <div class="pie-wrap">
+            <canvas id="pieChart" width="220" height="220"></canvas>
+            <div class="pie-center" id="pieCenter"></div>
+          </div>
+          <div class="legend" id="pieLegend"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">近 6 个月趋势</div>
+          <canvas id="trendChart" width="320" height="180"></canvas>
+          <div class="trend-legend">
+            <span><i class="dot dot-exp"></i>支出</span>
+            <span><i class="dot dot-inc"></i>收入</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 预算页 ============ -->
+      <section class="view view-budget" id="view-budget">
+        <div class="budget-hero" id="budgetHero">
+          <div class="bh-ring" id="bhRing">
+            <span class="bh-pct" id="bhPct">0%</span>
+          </div>
+          <div class="bh-info">
+            <div class="bh-title">本月总预算</div>
+            <div class="bh-used"><b id="bhUsed">¥0</b> / <span id="bhTotal">未设置</span></div>
+            <button class="pill-btn sm" id="setTotalBudget">设置总预算</button>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">分类预算 <button class="link-btn" id="addCatBudget">+ 添加</button></div>
+          <div class="budget-list" id="budgetList"></div>
+        </div>
+      </section>
+
+      <!-- ============ 我的页 ============ -->
+      <section class="view view-me" id="view-me">
+        <div class="me-hero">
+          <div class="me-avatar">🐱</div>
+          <div class="me-name" id="meName">记账小主人</div>
+          <div class="me-streak" id="meStreak">🔥 连续记账 0 天</div>
+        </div>
+
+        <div class="me-stats">
+          <div class="me-stat"><b id="meCount">0</b><span>累计笔数</span></div>
+          <div class="me-stat"><b id="meDays">0</b><span>记账天数</span></div>
+          <div class="me-stat"><b id="meAvg">0</b><span>日均笔数</span></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">我的成就</div>
+          <div class="badges" id="badges"></div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">设置</div>
+          <ul class="me-menu">
+            <li id="ledgerSetting"><span>📚 账本管理</span><span class="set-status" id="ledgerStatus">默认账本 ›</span></li>
+            <li id="catSetting"><span>🗂️ 分类管理</span><span class="chev">›</span></li>
+            <li id="reminderSetting"><span>⏰ 每日提醒</span><span class="set-status" id="reminderStatus">未开启 ›</span></li>
+            <li id="lockSetting"><span>🔒 安全锁</span><span class="set-status" id="lockStatus">未开启 ›</span></li>
+            <li id="fontSetting"><span>🔠 大字体模式</span><span class="switch" id="fontSwitch"><i></i></span></li>
+            <li id="installApp" hidden><span>📲 添加到主屏</span><span class="chev">›</span></li>
+            <li id="logoutItem"><span>🚪 退出登录</span><span class="chev">›</span></li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <div class="panel-title">数据与备份</div>
+          <ul class="me-menu">
+            <li id="exportCsv"><span>📤 导出 CSV</span><span class="chev">›</span></li>
+            <li id="exportExcel"><span>📊 导出 Excel</span><span class="chev">›</span></li>
+            <li id="backupJson"><span>💾 备份数据</span><span class="chev">›</span></li>
+            <li id="restoreJson"><span>📥 恢复备份</span><span class="chev">›</span></li>
+            <li id="seedDemo"><span>🎁 填充示例数据</span><span class="chev">›</span></li>
+            <li id="clearAll" class="danger"><span>🗑️ 清空所有数据</span><span class="chev">›</span></li>
+          </ul>
+          <input type="file" id="restoreFile" accept="application/json" hidden />
+        </div>
+
+        <p class="me-foot">随手记 V1.0.1 · 数据仅保存在本机浏览器</p>
+      </section>
+
+    </main>
+
+    <!-- 底部导航 -->
+    <nav class="tabbar" id="tabbar">
+      <button class="tab active" data-view="add">
+        <span class="tab-ic">✏️</span><span class="tab-tx">记账</span>
+      </button>
+      <button class="tab" data-view="bills">
+        <span class="tab-ic">📒</span><span class="tab-tx">账单</span>
+      </button>
+      <button class="tab" data-view="stats">
+        <span class="tab-ic">📊</span><span class="tab-tx">统计</span>
+      </button>
+      <button class="tab" data-view="budget">
+        <span class="tab-ic">🎯</span><span class="tab-tx">预算</span>
+      </button>
+      <button class="tab" data-view="me">
+        <span class="tab-ic">🐾</span><span class="tab-tx">我的</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <!-- 飞币动画层 -->
+  <div class="fx-layer" id="fxLayer"></div>
+
+  <!-- 通用弹窗 -->
+  <div class="sheet-mask" id="sheetMask" hidden>
+    <div class="sheet" id="sheet"></div>
+  </div>
+
+  <!-- 安全锁屏 -->
+  <div class="lock-screen" id="lockScreen" hidden>
+    <div class="lock-card">
+      <div class="lock-icon">🔒</div>
+      <div class="lock-title" id="lockTitle">输入密码</div>
+      <div class="lock-sub" id="lockSub">解锁你的随手记</div>
+      <div class="lock-dots" id="lockDots"><i></i><i></i><i></i><i></i></div>
+      <div class="lock-keypad" id="lockKeypad">
+        <button class="lk" data-d="1">1</button>
+        <button class="lk" data-d="2">2</button>
+        <button class="lk" data-d="3">3</button>
+        <button class="lk" data-d="4">4</button>
+        <button class="lk" data-d="5">5</button>
+        <button class="lk" data-d="6">6</button>
+        <button class="lk" data-d="7">7</button>
+        <button class="lk" data-d="8">8</button>
+        <button class="lk" data-d="9">9</button>
+        <button class="lk lk-ghost" id="lockCancel">取消</button>
+        <button class="lk" data-d="0">0</button>
+        <button class="lk lk-ghost" data-d="back">⌫</button>
+      </div>
+      <button class="lock-forgot" id="lockForgot">忘记密码？</button>
+    </div>
+  </div>
+
+  <!-- 账号认证屏（V1.0.1） -->
+  <div class="auth-screen" id="authScreen" hidden>
+    <div class="auth-card">
+      <div class="auth-hero">🐷</div>
+      <div class="auth-brand">随手记</div>
+      <div class="auth-tagline">打开即记 · 记完即走</div>
+
+      <!-- 登录 / 注册 切换 -->
+      <div class="auth-seg view-seg wide" id="authSeg" style="margin-bottom:0">
+        <button class="vseg-btn active" id="authTabLogin">登录</button>
+        <button class="vseg-btn" id="authTabRegister">注册</button>
+      </div>
+
+      <!-- 登录表单 -->
+      <form class="auth-form" id="loginForm" autocomplete="on">
+        <div class="auth-field">
+          <input type="text" id="loginUser" placeholder="用户名" autocomplete="username" maxlength="20" />
+          <div class="auth-err" id="loginUserErr"></div>
+        </div>
+        <div class="auth-field">
+          <div class="auth-pw-wrap">
+            <input type="password" id="loginPass" placeholder="密码" autocomplete="current-password" maxlength="20" />
+            <button type="button" class="auth-eye" id="loginEye">👁️</button>
+          </div>
+          <div class="auth-err" id="loginPassErr"></div>
+        </div>
+        <label class="auth-remember">
+          <input type="checkbox" id="loginRemember" checked /> 记住我（30 天免登录）
+        </label>
+        <button type="submit" class="auth-submit" id="loginBtn">登录</button>
+      </form>
+
+      <!-- 注册表单 -->
+      <form class="auth-form" id="registerForm" hidden autocomplete="on">
+        <div class="auth-field">
+          <input type="text" id="regUser" placeholder="用户名（4–20 位字母/数字/下划线）" autocomplete="username" maxlength="20" />
+          <div class="auth-err" id="regUserErr"></div>
+        </div>
+        <div class="auth-field">
+          <div class="auth-pw-wrap">
+            <input type="password" id="regPass" placeholder="密码（6–20 位，含字母与数字）" autocomplete="new-password" maxlength="20" />
+            <button type="button" class="auth-eye" id="regEye">👁️</button>
+          </div>
+          <div class="auth-err" id="regPassErr"></div>
+        </div>
+        <div class="auth-field">
+          <input type="password" id="regPassConfirm" placeholder="再次输入密码" autocomplete="new-password" maxlength="20" />
+          <div class="auth-err" id="regConfirmErr"></div>
+        </div>
+        <button type="submit" class="auth-submit" id="registerBtn">注册并开始记账</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

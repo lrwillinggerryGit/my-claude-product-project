@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls \"C:\\\\Users\\\\lrwillinggerry\\\\Desktop\\\\ClaudeCodeDemo2\\\\claude-my-product\\\\001PRD\\\\\")"
+    ]
+  }
+}

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>财务管家 - 登录</title>
+<!-- Load Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Load Plus Jakarta Sans Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "on-secondary-fixed-variant": "#5b3e4c",
+                "tertiary-container": "#e5b08c",
+                "on-secondary-fixed": "#2b1420",
+                "on-error": "#ffffff",
+                "surface-dim": "#e1d7e4",
+                "inverse-on-surface": "#f8edfb",
+                "tertiary-fixed-dim": "#f1bb96",
+                "primary-container": "#ff9ec4",
+                "inverse-primary": "#ffb0cd",
+                "background": "#fff7fe",
+                "surface-bright": "#fff7fe",
+                "on-primary": "#ffffff",
+                "tertiary-fixed": "#ffdcc5",
+                "secondary-fixed": "#ffd8e8",
+                "on-tertiary-fixed-variant": "#633e22",
+                "primary-fixed": "#ffd9e4",
+                "on-tertiary-container": "#684225",
+                "surface-variant": "#eadfec",
+                "secondary-container": "#fed5e6",
+                "on-background": "#1f1a23",
+                "error-container": "#ffdad6",
+                "surface-tint": "#934466",
+                "on-tertiary-fixed": "#301400",
+                "on-primary-container": "#7b3052",
+                "surface-container": "#f5eaf8",
+                "on-primary-fixed": "#3e0021",
+                "outline-variant": "#d7c1c7",
+                "on-surface-variant": "#524348",
+                "on-secondary": "#ffffff",
+                "secondary-fixed-dim": "#e3bccc",
+                "on-secondary-container": "#795a68",
+                "on-tertiary": "#ffffff",
+                "primary": "#934466",
+                "on-error-container": "#93000a",
+                "surface-container-high": "#efe5f2",
+                "error": "#ba1a1a",
+                "outline": "#857278",
+                "inverse-surface": "#342e38",
+                "surface": "#fff7fe",
+                "surface-container-low": "#fbf0fe",
+                "tertiary": "#7e5537",
+                "on-primary-fixed-variant": "#762c4e",
+                "on-surface": "#1f1a23",
+                "surface-container-lowest": "#ffffff"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "base": "4px",
+                "margin-mobile": "20px",
+                "gutter": "16px",
+                "card-padding": "24px",
+                "touch-target": "44px"
+        },
+        "fontFamily": {
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+        }
+      },
+    },
+  }
+</script>
+<style data-purpose="custom-layout">body { background: radial-gradient(100% 100% at 50% 0%, #FFF8FB 0%, #F5EAF8 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; } .btn-primary { background: linear-gradient(135deg, #934466 0%, #762c4e 100%); box-shadow: 0 4px 12px rgba(147, 68, 102, 0.2); transition: all 0.2s ease; } .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(147, 68, 102, 0.3); }</style>
+</head>
+<body class="font-sans text-on-surface" style="width: 1280px; height: 1024px; margin: 0px auto; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; background: radial-gradient(100% 100% at 50% 0%, #FFF8FB 0%, #F5EAF8 100%);">
+<!-- BEGIN: MainContainer -->
+<main class="w-full px-6 py-12 flex flex-col items-center" data-purpose="login-wrapper">
+<!-- BEGIN: Branding -->
+<section class="text-center mb-10" data-purpose="branding">
+<div class="flex items-center justify-center space-x-3 mb-2">
+<div class="text-3xl filter drop-shadow-sm">💰</div>
+<h1 class="text-3xl font-bold text-primary tracking-tight">财务管家</h1>
+</div>
+<p class="text-on-surface-variant text-sm font-medium opacity-80">加入财务管家，开启智能理财之旅</p>
+</section>
+<!-- END: Branding -->
+<!-- BEGIN: LoginCard -->
+<div class="bg-surface-container-lowest rounded-[32px] p-10 md:p-12 shadow-[0_8px_30px_rgba(255,158,196,0.1)] border border-surface-variant/20" data-purpose="login-card" style="max-width: 520px; width: 100%;">
+<header class="mb-10">
+<h2 class="text-2xl font-bold text-on-surface mb-2">欢迎回来</h2>
+<p class="text-sm text-on-surface-variant">请输入您的账户信息以管理财务</p>
+</header>
+<!-- BEGIN: LoginForm -->
+<form action="#" class="space-y-6" method="POST"><!-- Username Field -->
+<div data-purpose="input-group">
+<label class="block text-sm font-bold text-on-surface-variant mb-2.5 ml-1" for="username">用户名</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant/50">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="block w-full h-[52px] pl-12 pr-4 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 text-[15px] text-on-surface placeholder-on-surface-variant/40 transition-all bg-surface-container-lowest" id="username" placeholder="请输入用户名" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div data-purpose="input-group">
+<div class="flex justify-between items-center mb-2.5 ml-1">
+<label class="block text-sm font-bold text-on-surface-variant" for="password">密码</label>
+<a class="text-xs font-bold text-primary hover:text-on-primary-fixed-variant transition-colors" href="#">忘记密码？</a>
+</div>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-on-surface-variant/50">
+<svg class="h-5 w-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="block w-full h-[52px] pl-12 pr-4 border-none rounded-2xl focus:ring-2 focus:ring-primary/20 text-[15px] text-on-surface placeholder-on-surface-variant/40 transition-all bg-surface-container-lowest" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full h-[56px] btn-primary text-white font-bold rounded-2xl flex items-center justify-center space-x-2 text-lg mt-10 transition-all" data-purpose="submit-btn" type="submit">
+<span class="">立即登录</span>
+<svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M13 7l5 5m0 0l-5 5m5-5H6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</button></form>
+<!-- END: LoginForm -->
+<!-- Registration Footer -->
+<footer class="mt-10 text-center text-sm">
+<span class="text-on-surface-variant">还没有账号？</span>
+<a class="text-primary font-bold hover:underline ml-1" href="#">立即注册</a>
+</footer>
+</div>
+<!-- END: LoginCard -->
+<!-- Security Badge -->
+<div class="mt-10 flex items-center text-[11px] font-bold text-on-surface-variant/40 uppercase tracking-widest space-x-1.5" data-purpose="security-notice">
+<svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 20 20">
+<path clip-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" fill-rule="evenodd"></path>
+</svg>
+<span class="">银行级数据加密保护</span>
+</div>
+</main>
+<!-- END: MainContainer -->
+</body></html>

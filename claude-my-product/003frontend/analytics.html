@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>财务管家 — 统计报表</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans:['"Plus Jakarta Sans"','system-ui','sans-serif'] },
+          colors: { sakura:{ DEFAULT:'#FF9EC4',bg:'#FFF8FB' } },
+          borderRadius: { sakura:'16px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    body{background:linear-gradient(135deg,#F9A8C2 0%,#F47FA8 50%,#F58FB0 100%);background-attachment:fixed;}
+    .nav-link{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:12px;color:rgba(255,255,255,.8);font-weight:500;font-size:.9rem;transition:all .15s;text-decoration:none;}
+    .nav-link:hover{background:rgba(255,255,255,.18);color:#fff;}
+    .nav-link.active{background:rgba(255,255,255,.28);color:#fff;font-weight:700;}
+    .btn-grad{background:linear-gradient(135deg,#FF9EC4 0%,#c084fc 100%);}
+    .scrollbar-hide::-webkit-scrollbar{display:none;}
+    .trend-fill{fill:url(#trendGrad);}
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden font-sans">
+
+  <!-- Sidebar -->
+  <aside class="w-60 bg-white/10 backdrop-blur-xl flex flex-col py-8 flex-shrink-0">
+    <div class="px-6 mb-10 flex items-center gap-3">
+      <div class="w-9 h-9 bg-white/25 rounded-xl flex items-center justify-center text-white text-base">💰</div>
+      <div>
+        <div class="font-bold text-white text-sm leading-tight drop-shadow">财务管家</div>
+        <div class="text-xs text-white/70">管理您的每一分钱</div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 space-y-1">
+      <a href="dashboard.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        首页
+      </a>
+      <a href="transactions.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        交易
+      </a>
+      <a href="analytics.html" class="nav-link active">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        统计
+      </a>
+      <a href="settings.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        设置
+      </a>
+    </nav>
+    <div class="px-4 mt-4">
+      <a href="new-entry.html" class="btn-grad block text-center text-white font-bold py-3.5 rounded-full shadow-lg text-sm">+ 快速记账</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <header class="flex items-center justify-between px-10 py-5 bg-white/10 backdrop-blur-xl">
+      <div>
+        <h2 class="text-2xl font-bold text-gray-800">统计报表</h2>
+        <p class="text-sm text-gray-400">正在查看 2023年10月 的数据分析</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="flex bg-gray-50 p-1 rounded-xl border border-gray-100">
+          <button class="px-5 py-2 rounded-lg bg-pink-100 text-sakura font-bold text-sm">按月</button>
+          <button class="px-5 py-2 text-gray-500 text-sm font-medium">按季</button>
+          <button class="px-5 py-2 text-gray-500 text-sm font-medium">按年</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto scrollbar-hide px-10 py-8 space-y-6">
+      <!-- Metric cards -->
+      <div class="grid grid-cols-3 gap-6">
+        <div class="bg-white rounded-sakura p-7 shadow-sm border border-pink-50">
+          <p class="text-sm text-gray-400 mb-4">总支出</p>
+          <div class="flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-gray-800">¥4,285.50</span>
+            <span class="text-sakura text-sm font-semibold">↑12%</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-sakura p-7 shadow-sm border border-pink-50">
+          <p class="text-sm text-gray-400 mb-4">总收入</p>
+          <div class="flex items-baseline gap-2">
+            <span class="text-2xl font-bold text-gray-800">¥6,120.00</span>
+            <span class="text-emerald-500 text-sm font-semibold">↑5%</span>
+          </div>
+        </div>
+        <div class="bg-white rounded-sakura p-7 shadow-sm border border-pink-50 flex items-center justify-between">
+          <div>
+            <p class="text-sm text-gray-400 mb-4">支出大头</p>
+            <p class="text-xl font-bold text-gray-800">餐饮美食</p>
+          </div>
+          <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-2xl">🍜</div>
+        </div>
+      </div>
+
+      <!-- Charts row -->
+      <div class="grid grid-cols-3 gap-6">
+        <!-- Trend chart -->
+        <div class="col-span-2 bg-white rounded-sakura p-7 shadow-sm border border-pink-50">
+          <div class="flex justify-between items-center mb-6">
+            <h4 class="font-bold text-gray-800">支出趋势图</h4>
+            <div class="flex gap-4 text-xs font-medium text-gray-500">
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sakura inline-block"></span>实际支出</span>
+              <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-purple-300 inline-block"></span>预算</span>
+            </div>
+          </div>
+          <div class="h-48">
+            <svg class="w-full h-full" viewBox="0 0 800 180" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="trendGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style="stop-color:#FFD6E7;stop-opacity:.4"/>
+                  <stop offset="100%" style="stop-color:#FFD6E7;stop-opacity:0"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,140 C100,130 150,165 220,160 C320,155 370,130 450,120 C550,110 600,65 700,85 C780,100 800,130 800,130 L800,180 L0,180 Z" class="trend-fill"/>
+              <path d="M0,140 C100,130 150,165 220,160 C320,155 370,130 450,120 C550,110 600,65 700,85 C780,100 800,130 800,130" fill="none" stroke="#FF9EC4" stroke-width="3"/>
+              <path d="M0,120 C100,125 200,140 300,138 C400,136 500,100 600,95 C700,90 750,110 800,112" fill="none" stroke="#d8b4fe" stroke-width="2" stroke-dasharray="6 4"/>
+            </svg>
+          </div>
+          <div class="flex justify-between text-xs text-gray-400 px-1 mt-1">
+            <span>10月01日</span><span>10月08日</span><span>10月15日</span><span>10月22日</span><span>10月31日</span>
+          </div>
+        </div>
+
+        <!-- Donut chart -->
+        <div class="bg-white rounded-sakura p-7 shadow-sm border border-pink-50">
+          <h4 class="font-bold text-gray-800 mb-6">分类支出占比</h4>
+          <div class="flex justify-center mb-6 relative">
+            <svg class="w-36 h-36 -rotate-90">
+              <circle cx="72" cy="72" r="58" fill="transparent" stroke="#774360" stroke-dasharray="91 365" stroke-dashoffset="0" stroke-width="18"/>
+              <circle cx="72" cy="72" r="58" fill="transparent" stroke="#B25068" stroke-dasharray="73 365" stroke-dashoffset="-96" stroke-width="18"/>
+              <circle cx="72" cy="72" r="58" fill="transparent" stroke="#8E8EBC" stroke-dasharray="55 365" stroke-dashoffset="-174" stroke-width="18"/>
+              <circle cx="72" cy="72" r="58" fill="transparent" stroke="#D8D8F6" stroke-dasharray="146 365" stroke-dashoffset="-234" stroke-width="18"/>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span class="text-xs text-gray-400">总计</span>
+              <span class="font-bold text-lg text-gray-800">¥4.3k</span>
+            </div>
+          </div>
+          <div class="space-y-3">
+            <div class="flex items-center justify-between text-sm"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#774360] inline-block"></span><span class="text-gray-600">餐饮</span></div><span class="font-bold">25%</span></div>
+            <div class="flex items-center justify-between text-sm"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#B25068] inline-block"></span><span class="text-gray-600">购物</span></div><span class="font-bold">20%</span></div>
+            <div class="flex items-center justify-between text-sm"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#8E8EBC] inline-block"></span><span class="text-gray-600">交通</span></div><span class="font-bold">15%</span></div>
+            <div class="flex items-center justify-between text-sm"><div class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-[#D8D8F6] inline-block"></span><span class="text-gray-600">其他</span></div><span class="font-bold">40%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Details list -->
+      <div class="bg-white rounded-sakura p-7 shadow-sm border border-pink-50">
+        <h4 class="font-bold text-gray-800 mb-5">支出明细</h4>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-white hover:shadow-sm transition-all cursor-pointer">
+            <div class="flex items-center gap-4"><div class="w-11 h-11 bg-indigo-100 text-indigo-500 rounded-xl flex items-center justify-center text-xl">🛍️</div><div><p class="font-bold text-gray-800 text-sm">超市买菜</p><p class="text-xs text-gray-400">生活必需</p></div></div>
+            <div class="flex items-center gap-4"><span class="font-bold text-gray-800">¥842.12</span><div class="w-36 h-1.5 bg-gray-200 rounded-full overflow-hidden"><div class="h-full bg-indigo-400 w-3/4"></div></div></div>
+          </div>
+          <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-white hover:shadow-sm transition-all cursor-pointer">
+            <div class="flex items-center gap-4"><div class="w-11 h-11 bg-pink-100 text-pink-500 rounded-xl flex items-center justify-center text-xl">⚡</div><div><p class="font-bold text-gray-800 text-sm">水电煤气</p><p class="text-xs text-gray-400">固定支出</p></div></div>
+            <div class="flex items-center gap-4"><span class="font-bold text-gray-800">¥215.50</span><div class="w-36 h-1.5 bg-gray-200 rounded-full overflow-hidden"><div class="h-full bg-pink-400 w-1/4"></div></div></div>
+          </div>
+          <div class="flex items-center justify-between p-4 bg-gray-50 rounded-2xl hover:bg-white hover:shadow-sm transition-all cursor-pointer">
+            <div class="flex items-center gap-4"><div class="w-11 h-11 bg-red-100 text-red-500 rounded-xl flex items-center justify-center text-xl">🏋️</div><div><p class="font-bold text-gray-800 text-sm">健身房会员</p><p class="text-xs text-gray-400">健康生活</p></div></div>
+            <div class="flex items-center gap-4"><span class="font-bold text-gray-800">¥55.00</span><div class="w-36 h-1.5 bg-gray-200 rounded-full overflow-hidden"><div class="h-full bg-red-400 w-[12%]"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

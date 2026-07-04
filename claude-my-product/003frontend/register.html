@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>财务管家 — 注册账号</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'] },
+          colors: {
+            sakura: { DEFAULT: '#FF9EC4', light: '#FFD6E7', bg: '#FFF8FB', dim: '#F5EAF8' },
+          },
+          borderRadius: { card: '24px', input: '16px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #F9A8C2 0%, #F47FA8 50%, #F58FB0 100%);
+      background-attachment: fixed;
+    }
+    .btn-primary { background: linear-gradient(135deg, #FF9EC4 0%, #c084fc 100%); transition: opacity .2s; }
+    .btn-primary:hover { opacity: .88; }
+    .btn-primary:disabled { opacity: .4; cursor: not-allowed; }
+    .input-wrap:focus-within { border-color: #FF9EC4; box-shadow: 0 0 0 3px rgba(255,158,196,.15); }
+    .field-error { color: #FF6F91; font-size: .75rem; margin-top: .25rem; display: none; }
+    .field-error.visible { display: block; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center font-sans p-6">
+
+  <!-- Branding -->
+  <div class="flex flex-col items-center mb-8">
+    <div class="flex items-center gap-3">
+      <span class="text-4xl leading-none shrink-0">💰</span>
+      <h1 class="text-3xl font-bold tracking-widest text-white drop-shadow-md">财务管家</h1>
+    </div>
+    <p class="text-xs font-semibold text-gray-300 uppercase tracking-widest mt-3">第一次来？三十秒就能开始记账啦～</p>
+  </div>
+
+  <!-- Card -->
+  <div class="w-full max-w-md bg-white rounded-card shadow-xl px-10 py-10">
+    <h2 class="text-2xl font-bold text-gray-800 mb-1">注册账号</h2>
+    <p class="text-sm text-gray-400 mb-8">加入财务管家，开启智能理财之旅</p>
+
+    <form id="registerForm" class="space-y-5" onsubmit="handleRegister(event)" novalidate>
+      <!-- Username -->
+      <div>
+        <label class="text-sm font-semibold text-gray-600 block mb-1.5" for="reg-username">用户名</label>
+        <div class="input-wrap relative flex items-center bg-gray-50 border border-gray-100 rounded-input px-4 transition-all">
+          <svg class="w-5 h-5 text-gray-300 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+          </svg>
+          <input id="reg-username" type="text" placeholder="4–20位字母/数字/下划线" required
+            class="flex-1 ml-3 py-4 bg-transparent text-gray-800 placeholder-gray-300 border-0 focus:outline-none focus:ring-0 text-sm"/>
+        </div>
+        <p id="err-username" class="field-error">用户名格式不符（4–20位字母/数字/下划线，须以字母或数字开头）</p>
+      </div>
+
+      <!-- Password -->
+      <div>
+        <label class="text-sm font-semibold text-gray-600 block mb-1.5" for="reg-password">设置密码</label>
+        <div class="input-wrap relative flex items-center bg-gray-50 border border-gray-100 rounded-input px-4 transition-all">
+          <svg class="w-5 h-5 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          </svg>
+          <input id="reg-password" type="password" placeholder="6–20位，需同时含字母与数字" required
+            class="flex-1 ml-3 py-4 bg-transparent text-gray-800 placeholder-gray-300 border-0 focus:outline-none focus:ring-0 text-sm"/>
+          <button type="button" class="toggle-pwd text-gray-300 hover:text-gray-500 transition-colors" data-target="reg-password">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+            </svg>
+          </button>
+        </div>
+        <p id="err-password" class="field-error">密码需6–20位，且同时包含字母与数字</p>
+      </div>
+
+      <!-- Confirm Password -->
+      <div>
+        <label class="text-sm font-semibold text-gray-600 block mb-1.5" for="reg-confirm">确认密码</label>
+        <div class="input-wrap relative flex items-center bg-gray-50 border border-gray-100 rounded-input px-4 transition-all">
+          <svg class="w-5 h-5 text-gray-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+          </svg>
+          <input id="reg-confirm" type="password" placeholder="请再次输入密码" required
+            class="flex-1 ml-3 py-4 bg-transparent text-gray-800 placeholder-gray-300 border-0 focus:outline-none focus:ring-0 text-sm"/>
+        </div>
+        <p id="err-confirm" class="field-error">两次输入的密码不一致</p>
+      </div>
+
+      <!-- Terms -->
+      <div class="flex items-start gap-2 py-1">
+        <input id="terms" type="checkbox" required
+          class="mt-0.5 h-4 w-4 rounded border-gray-200 text-sakura focus:ring-sakura cursor-pointer"/>
+        <label for="terms" class="text-sm text-gray-500 leading-relaxed">
+          我已阅读并同意
+          <a href="#" class="text-yellow-700 font-medium hover:underline">服务协议</a>
+          与
+          <a href="#" class="text-yellow-700 font-medium hover:underline">隐私政策</a>
+        </label>
+      </div>
+
+      <button id="submitBtn" type="submit"
+        class="btn-primary w-full py-4 rounded-full text-white font-bold text-base shadow-lg flex items-center justify-center gap-2">
+        立即注册
+      </button>
+    </form>
+
+    <p class="text-center text-sm text-gray-400 mt-6">
+      已有账号？
+      <a href="login.html" class="text-sakura font-semibold hover:underline ml-1">立即登录</a>
+    </p>
+  </div>
+
+  <!-- Trust badges -->
+  <div class="mt-8 flex gap-8">
+    <div class="flex flex-col items-center gap-1">
+      <div class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center">
+        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <span class="text-xs text-gray-300">银行级加密</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <div class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center">
+        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+      </div>
+      <span class="text-xs text-gray-300">合规存管</span>
+    </div>
+    <div class="flex flex-col items-center gap-1">
+      <div class="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center">
+        <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+        </svg>
+      </div>
+      <span class="text-xs text-gray-300">实时同步</span>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.toggle-pwd').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById(btn.dataset.target);
+        input.type = input.type === 'password' ? 'text' : 'password';
+      });
+    });
+
+    function validate() {
+      const u = document.getElementById('reg-username').value;
+      const p = document.getElementById('reg-password').value;
+      const c = document.getElementById('reg-confirm').value;
+      const t = document.getElementById('terms').checked;
+      const uOk = /^[a-zA-Z0-9][a-zA-Z0-9_]{3,19}$/.test(u);
+      const pOk = /^(?=.*[a-zA-Z])(?=.*\d)[^\s]{6,20}$/.test(p);
+      const cOk = p === c && c.length > 0;
+      document.getElementById('err-username').classList.toggle('visible', u.length > 0 && !uOk);
+      document.getElementById('err-password').classList.toggle('visible', p.length > 0 && !pOk);
+      document.getElementById('err-confirm').classList.toggle('visible', c.length > 0 && !cOk);
+      document.getElementById('submitBtn').disabled = !(uOk && pOk && cOk && t);
+    }
+
+    ['reg-username','reg-password','reg-confirm','terms'].forEach(id =>
+      document.getElementById(id).addEventListener('input', validate)
+    );
+    validate();
+
+    function handleRegister(e) {
+      e.preventDefault();
+      window.location.href = 'dashboard.html';
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>财务管家 — 快速记账</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans:['"Plus Jakarta Sans"','system-ui','sans-serif'] },
+          colors: { sakura:{ DEFAULT:'#FF9EC4', bg:'#FFF8FB' } },
+          borderRadius: { sakura:'16px' },
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background:linear-gradient(135deg,#F9A8C2 0%,#F47FA8 50%,#F58FB0 100%); background-attachment:fixed; }
+    .nav-link { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:12px; color:rgba(255,255,255,.8); font-weight:500; font-size:.9rem; transition:all .15s; text-decoration:none; }
+    .nav-link:hover { background:rgba(255,255,255,.18); color:#fff; }
+    .nav-link.active { background:rgba(255,255,255,.28); color:#fff; font-weight:700; }
+    .btn-grad { background:linear-gradient(135deg,#FF9EC4 0%,#c084fc 100%); }
+    .scrollbar-hide::-webkit-scrollbar { display:none; }
+    .cat-btn { display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; }
+    .cat-icon { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:1.3rem; transition:transform .15s; }
+    .cat-btn:hover .cat-icon { transform:scale(1.1); }
+    .cat-btn.selected .cat-icon { background:#FF9EC4 !important; box-shadow:0 4px 12px rgba(255,158,196,.4); }
+    .type-btn { flex:1; padding:8px; border-radius:9999px; font-size:.8rem; font-weight:600; transition:all .15s; }
+    .type-btn.active-exp { background:#8e5b6a; color:#fff; }
+    .type-btn.active-inc { background:#3DBE8B; color:#fff; }
+    /* 隐藏数字输入框自带的上下微调箭头，避免白底突兀 */
+    .no-spin::-webkit-inner-spin-button, .no-spin::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+    .no-spin { -moz-appearance:textfield; appearance:textfield; }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden font-sans">
+
+  <!-- Sidebar -->
+  <aside class="w-60 bg-white/10 backdrop-blur-xl flex flex-col py-8 flex-shrink-0">
+    <div class="px-6 mb-10 flex items-center gap-3">
+      <div class="w-9 h-9 bg-white/25 rounded-xl flex items-center justify-center text-white text-base">💰</div>
+      <div>
+        <div class="font-bold text-white text-sm leading-tight drop-shadow">财务管家</div>
+        <div class="text-xs text-white/70">管理您的每一分钱</div>
+      </div>
+    </div>
+    <nav class="flex-1 px-3 space-y-1">
+      <a href="dashboard.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        首页
+      </a>
+      <a href="transactions.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        交易
+      </a>
+      <a href="analytics.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        统计
+      </a>
+      <a href="settings.html" class="nav-link">
+        <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        设置
+      </a>
+    </nav>
+    <div class="px-4 mt-4">
+      <a href="new-entry.html" class="btn-grad block text-center text-white font-bold py-3.5 rounded-full shadow-lg text-sm active">+ 快速记账</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="flex-1 flex flex-col overflow-hidden">
+    <header class="flex items-center justify-between px-10 py-5 bg-white/10 backdrop-blur-xl">
+      <h2 class="text-2xl font-bold text-gray-800">新增账目</h2>
+      <a href="transactions.html" class="text-sm text-gray-400 hover:text-sakura transition-colors flex items-center gap-1">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        返回交易列表
+      </a>
+    </header>
+
+    <div class="flex-1 overflow-y-auto scrollbar-hide px-10 py-8">
+      <div class="grid grid-cols-12 gap-6">
+
+        <!-- Left: amount + categories -->
+        <section class="col-span-8 bg-pink-50/50 rounded-3xl p-8 flex flex-col">
+          <div class="flex justify-between items-center mb-8">
+            <h3 class="text-lg font-bold text-gray-700">记录一笔</h3>
+            <div class="bg-white p-1 rounded-full flex gap-1 w-44 border border-gray-100">
+              <button id="btnExp" class="type-btn active-exp" onclick="setType('exp')">支出</button>
+              <button id="btnInc" class="type-btn text-gray-400" onclick="setType('inc')">收入</button>
+            </div>
+          </div>
+
+          <!-- Amount -->
+          <div class="text-center py-8">
+            <p class="text-sm text-gray-400 mb-3 font-medium">金额</p>
+            <div class="flex items-center justify-center gap-2">
+              <span class="text-sakura text-3xl font-bold opacity-60">¥</span>
+              <input id="amountInput" type="number" min="0" step="0.01" placeholder="0.00"
+                class="no-spin text-6xl font-bold text-gray-200 bg-transparent border-none focus:outline-none focus:ring-0 w-64 text-center placeholder-gray-100"
+                oninput="checkSave()"/>
+            </div>
+          </div>
+
+          <!-- Categories -->
+          <div class="mt-auto">
+            <a href="categories.html" class="block text-sm text-gray-400 font-medium hover:text-sakura transition-colors mb-5">选择分类</a>
+            <div id="catGrid" class="grid grid-cols-5 gap-y-6"></div>
+          </div>
+        </section>
+
+        <!-- Right: details + save -->
+        <section class="col-span-4 bg-pink-50/30 rounded-3xl p-8 flex flex-col">
+          <h3 class="text-lg font-bold text-gray-700 mb-6">账目详情</h3>
+
+          <!-- Account -->
+          <div class="mb-6">
+            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-3">支付账户</label>
+            <div class="space-y-2">
+              <div id="acc-wechat" class="flex items-center justify-between bg-white p-3.5 rounded-2xl border-2 border-sakura cursor-pointer" onclick="selectAcc('wechat')">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center text-lg">💬</div>
+                  <span class="font-medium text-sm">微信支付</span>
+                </div>
+                <div class="dot w-4 h-4 bg-sakura rounded-full"></div>
+              </div>
+              <div id="acc-alipay" class="flex items-center justify-between bg-white p-3.5 rounded-2xl border border-gray-50 cursor-pointer" onclick="selectAcc('alipay')">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 bg-blue-100 rounded-xl flex items-center justify-center text-lg">💳</div>
+                  <span class="font-medium text-sm">支付宝</span>
+                </div>
+              </div>
+              <div id="acc-bank" class="flex items-center justify-between bg-white p-3.5 rounded-2xl border border-gray-50 cursor-pointer" onclick="selectAcc('bank')">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 bg-red-100 rounded-xl flex items-center justify-center text-lg">🏦</div>
+                  <span class="font-medium text-sm">招商银行</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date -->
+          <div class="mb-6">
+            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-3">日期</label>
+            <div class="relative">
+              <input id="dateInput" type="date" class="w-full bg-white border-none rounded-2xl p-3.5 pr-10 text-sm font-medium focus:ring-2 focus:ring-pink-200"/>
+              <svg class="w-4 h-4 text-gray-300 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+            </div>
+          </div>
+
+          <!-- Remarks -->
+          <div class="mb-8">
+            <label class="text-xs font-semibold text-gray-400 uppercase tracking-wide block mb-3">备注（选填）</label>
+            <textarea placeholder="这笔钱花在哪里了？" maxlength="50"
+              class="w-full bg-white border-none rounded-2xl p-3.5 min-h-[100px] focus:ring-2 focus:ring-pink-200 resize-none text-sm"></textarea>
+          </div>
+
+          <!-- Save -->
+          <div class="mt-auto space-y-3">
+            <button id="saveBtn" disabled onclick="handleSave()"
+              class="btn-grad w-full py-4 rounded-full text-white font-bold shadow-lg flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+              保存账目
+            </button>
+            <p class="text-center text-xs text-gray-300">安全且私密的记录</p>
+          </div>
+        </section>
+      </div>
+
+      <!-- Recent activity -->
+      <section class="mt-8">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-gray-800">最近活动</h3>
+          <a href="transactions.html" class="text-sakura text-sm font-medium hover:underline">查看历史记录</a>
+        </div>
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-pink-50/40 p-4 rounded-2xl flex items-center justify-between border border-pink-50">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 bg-pink-100 rounded-2xl flex items-center justify-center text-lg">👕</div>
+              <div><p class="font-bold text-sm text-gray-800">优衣库</p><p class="text-xs text-gray-400">今天, 2:15 PM</p></div>
+            </div>
+            <span class="text-red-400 font-bold text-sm">-¥299.00</span>
+          </div>
+          <div class="bg-pink-50/40 p-4 rounded-2xl flex items-center justify-between border border-pink-50">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 bg-pink-100 rounded-2xl flex items-center justify-center text-lg">☕</div>
+              <div><p class="font-bold text-sm text-gray-800">星巴克</p><p class="text-xs text-gray-400">今天, 9:05 AM</p></div>
+            </div>
+            <span class="text-red-400 font-bold text-sm">-¥38.00</span>
+          </div>
+          <div class="bg-pink-50/40 p-4 rounded-2xl flex items-center justify-between border border-pink-50">
+            <div class="flex items-center gap-3">
+              <div class="w-11 h-11 bg-green-50 rounded-2xl flex items-center justify-center text-lg">💰</div>
+              <div><p class="font-bold text-sm text-gray-800">工资转账</p><p class="text-xs text-gray-400">昨天</p></div>
+            </div>
+            <span class="text-green-500 font-bold text-sm">+¥15,000</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- All-categories picker modal -->
+  <div id="catPickModal" class="hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-50 flex items-center justify-center p-6">
+    <div class="bg-white rounded-3xl p-7 w-full max-w-lg shadow-2xl">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-bold text-gray-800 text-lg">选择分类</h3>
+        <button onclick="closeCatModal()" class="text-gray-300 hover:text-gray-500 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/></svg>
+        </button>
+      </div>
+      <div id="catModalGrid" class="grid grid-cols-5 gap-y-6 gap-x-2 max-h-80 overflow-y-auto scrollbar-hide"></div>
+      <div class="mt-6 text-center">
+        <a href="categories.html" class="text-sm text-sakura font-medium hover:underline">管理分类 ›</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Set today's date
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('dateInput').value = today;
+
+    /* ===== 分类：与「分类管理」页共享同一份 localStorage 数据 ===== */
+    const CAT_STORE_KEY = 'suishouji_categories_v1';
+    const CAT_DEFAULTS = {
+      expense: [
+        {emoji:'🍜',name:'餐饮'},{emoji:'🛒',name:'购物'},{emoji:'🚌',name:'交通'},
+        {emoji:'🏠',name:'居家'},{emoji:'🏡',name:'房租'},{emoji:'🎬',name:'娱乐'},
+        {emoji:'💊',name:'医疗'},{emoji:'📚',name:'教育'},{emoji:'📱',name:'通讯'},{emoji:'💝',name:'人情'}
+      ],
+      income: [
+        {emoji:'💰',name:'工资'},{emoji:'💼',name:'劳务'},{emoji:'🧧',name:'外快'},
+        {emoji:'📈',name:'投资'},{emoji:'🎁',name:'红包'}
+      ]
+    };
+    const VISIBLE_LIMIT = 10; // 5 列 × 2 行；超出则末位放「更多」
+
+    function catUid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+    function loadCats(){
+      try {
+        const raw = localStorage.getItem(CAT_STORE_KEY);
+        if (raw) {
+          const d = JSON.parse(raw);
+          if (d && Array.isArray(d.expense) && Array.isArray(d.income)) return d;
+        }
+      } catch (e) {}
+      const seed = {
+        expense: CAT_DEFAULTS.expense.map(c => ({ id: catUid(), ...c })),
+        income:  CAT_DEFAULTS.income.map(c => ({ id: catUid(), ...c })),
+      };
+      try { localStorage.setItem(CAT_STORE_KEY, JSON.stringify(seed)); } catch (e) {}
+      return seed;
+    }
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
+
+    let catData = loadCats();
+    let curCatType = 'expense';   // expense | income
+    let selectedCatId = null;
+
+    function catTile(c){
+      const sel = c.id === selectedCatId ? ' selected' : '';
+      return `<div class="cat-btn${sel}" onclick="pickCat('${c.id}')">
+          <div class="cat-icon bg-white border border-gray-50">${c.emoji}</div>
+          <span class="text-xs text-gray-500 font-medium truncate max-w-[60px]">${escapeHtml(c.name)}</span>
+        </div>`;
+    }
+    function moreTile(){
+      return `<div class="cat-btn" onclick="openCatModal()">
+          <div class="cat-icon bg-white border border-gray-50">➕</div>
+          <span class="text-xs text-gray-500 font-medium">更多</span>
+        </div>`;
+    }
+    function renderCats(){
+      const cats = catData[curCatType] || [];
+      const overflow = cats.length > VISIBLE_LIMIT;
+      let visible = overflow ? cats.slice(0, VISIBLE_LIMIT - 1) : cats.slice();
+      // 选中项若落在「更多」里，确保它仍显示在可见区
+      if (overflow && selectedCatId && !visible.some(c => c.id === selectedCatId)) {
+        const sel = cats.find(c => c.id === selectedCatId);
+        if (sel) visible[visible.length - 1] = sel;
+      }
+      let html = visible.map(catTile).join('');
+      if (overflow) html += moreTile();
+      document.getElementById('catGrid').innerHTML = html;
+    }
+    function pickCat(id){ selectedCatId = id; renderCats(); }
+
+    function openCatModal(){
+      const cats = catData[curCatType] || [];
+      document.getElementById('catModalGrid').innerHTML = cats.map(catTileModal).join('');
+      document.getElementById('catPickModal').classList.remove('hidden');
+    }
+    function catTileModal(c){
+      const sel = c.id === selectedCatId ? ' selected' : '';
+      return `<div class="cat-btn${sel}" onclick="pickCatFromModal('${c.id}')">
+          <div class="cat-icon bg-white border border-gray-50">${c.emoji}</div>
+          <span class="text-xs text-gray-500 font-medium truncate max-w-[60px]">${escapeHtml(c.name)}</span>
+        </div>`;
+    }
+    function closeCatModal(){ document.getElementById('catPickModal').classList.add('hidden'); }
+    function pickCatFromModal(id){ selectedCatId = id; closeCatModal(); renderCats(); }
+
+    function setType(t) {
+      const e = document.getElementById('btnExp');
+      const i = document.getElementById('btnInc');
+      e.className = 'type-btn ' + (t === 'exp' ? 'active-exp' : 'text-gray-400');
+      i.className = 'type-btn ' + (t === 'inc' ? 'active-inc' : 'text-gray-400');
+      curCatType = (t === 'inc') ? 'income' : 'expense';
+      const cats = catData[curCatType] || [];
+      selectedCatId = cats.length ? cats[0].id : null; // 切换类型后默认选第一个
+      renderCats();
+    }
+
+    function selectAcc(id) {
+      ['wechat','alipay','bank'].forEach(a => {
+        const el = document.getElementById('acc-' + a);
+        if (a === id) {
+          el.classList.add('border-2','border-sakura');
+          el.classList.remove('border','border-gray-50');
+          if (!el.querySelector('.dot')) {
+            const dot = document.createElement('div');
+            dot.className = 'dot w-4 h-4 bg-[#FF9EC4] rounded-full';
+            el.appendChild(dot);
+          }
+        } else {
+          el.classList.remove('border-2','border-sakura');
+          el.classList.add('border','border-gray-50');
+          const dot = el.querySelector('.dot');
+          if (dot) dot.remove();
+        }
+      });
+    }
+
+    function checkSave() {
+      const v = parseFloat(document.getElementById('amountInput').value);
+      document.getElementById('saveBtn').disabled = !(v > 0);
+    }
+
+    function handleSave() {
+      const v = parseFloat(document.getElementById('amountInput').value);
+      if (!v || v <= 0) return;
+      // Show success feedback then redirect
+      const btn = document.getElementById('saveBtn');
+      btn.textContent = '✓ 已保存！';
+      btn.style.background = '#3DBE8B';
+      setTimeout(() => { window.location.href = 'transactions.html'; }, 800);
+    }
+
+    // 初始化：默认渲染「支出」分类；点击弹框空白处关闭
+    setType('exp');
+    document.getElementById('catPickModal').addEventListener('click', function (e) {
+      if (e.target === this) closeCatModal();
+    });
+  </script>
+</body>
+</html>

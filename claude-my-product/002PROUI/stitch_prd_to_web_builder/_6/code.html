@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Steward - 财务管家</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Font: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Lucide Icons (as a substitute for standard icons) -->
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            sakura: {
+              DEFAULT: '#ff9ec4',
+              light: '#fff7fe',
+              dim: '#e1d7e4',
+              surface: '#FFF8FB',
+              container: '#fbf0fe',
+              dark: '#e889ac'
+            },
+            expense: '#8e5b6a',
+            income: '#f5eff2'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui'],
+          },
+          borderRadius: {
+            'sakura': '1rem',
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-styling">
+    body {
+      background-color: #FFF8FB;
+      font-family: "Plus Jakarta Sans", "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    .gradient-button {
+      background: linear-gradient(135deg, #ffc0cb 0%, #d8b4fe 100%);
+    }
+    .sidebar-active {
+      color: #ff9ec4;
+      background-color: #fff1f6;
+    }
+    /* Hide scrollbar but keep functionality */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800">
+<!-- BEGIN: LeftSidebar -->
+<aside class="w-64 bg-white border-r border-gray-100 flex flex-col p-6 h-full flex-shrink-0" data-purpose="navigation-sidebar">
+<!-- Branding -->
+<div class="flex items-center gap-3 mb-12 px-2" data-purpose="brand-logo">
+<div class="w-10 h-10 bg-sakura rounded-xl flex items-center justify-center text-white font-bold text-xl">S</div>
+<div>
+<h1 class="text-sakura font-bold text-lg leading-tight">Steward</h1>
+<p class="text-gray-400 text-xs">财务管家</p>
+</div>
+</div>
+<!-- Navigation Menu -->
+<nav class="flex-grow space-y-2" data-purpose="main-menu">
+<a class="flex items-center gap-4 px-4 py-3 rounded-sakura text-gray-400 hover:bg-pink-50 transition-colors" href="#">
+<i class="w-5 h-5" data-lucide="layout-grid"></i>
+<span class="font-medium">首页</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-sakura text-gray-400 hover:bg-pink-50 transition-colors" href="#">
+<i class="w-5 h-5" data-lucide="arrow-left-right"></i>
+<span class="font-medium">交易</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-sakura text-gray-400 hover:bg-pink-50 transition-colors" href="#">
+<i class="w-5 h-5" data-lucide="bar-chart-2"></i>
+<span class="font-medium">统计</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-sakura text-gray-400 hover:bg-pink-50 transition-colors" href="#">
+<i class="w-5 h-5" data-lucide="settings"></i>
+<span class="font-medium">设置</span>
+</a>
+</nav>
+<!-- Quick Entry Button -->
+<button class="gradient-button text-white w-full py-4 rounded-sakura flex items-center justify-center gap-2 shadow-lg shadow-pink-100 font-medium mt-auto" data-purpose="quick-add-btn">
+<i class="w-5 h-5" data-lucide="plus"></i>
+      快速记账
+    </button>
+</aside>
+<!-- END: LeftSidebar -->
+<!-- BEGIN: MainContent -->
+<main class="flex-grow flex flex-col h-full overflow-y-auto no-scrollbar" data-purpose="content-area">
+<!-- BEGIN: TopBar -->
+<header class="flex items-center justify-between px-10 py-6" data-purpose="main-header">
+<h2 class="text-xl font-bold text-sakura">Steward</h2>
+<div class="flex items-center gap-6">
+<!-- Search Bar -->
+<div class="relative w-72" data-purpose="global-search">
+<i class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" data-lucide="search"></i>
+<input class="w-full pl-11 pr-4 py-2.5 bg-gray-100 border-none rounded-full text-sm focus:ring-2 focus:ring-sakura/30" placeholder="搜索交易记录..." type="text"/>
+</div>
+<!-- Action Icons -->
+<div class="flex items-center gap-4 text-gray-400">
+<button class="hover:text-sakura transition-colors"><i class="w-5 h-5" data-lucide="bell"></i></button>
+<button class="hover:text-sakura transition-colors"><i class="w-5 h-5" data-lucide="help-circle"></i></button>
+<div class="w-9 h-9 rounded-full overflow-hidden border border-gray-100 cursor-pointer">
+<img alt="Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMKZ69wA5wGPDjV5u5HiigZZK7sRRqW3lBalXKEgIZMssCDUrLZRCSb-3iRGQDgDLPxAfjstK_YGJk4QcWc4qf1nS2o2Bcq2BzZn_JCi61xihrUesa1nz-p81K0gMIdbSvNSzdJ63oXvPN__Z0noa5al-BGbv_Hgl2briheVIcsM-Ea5d3JeT4MsMHfK8Buya01YP-5ZiJLnX0ijj5xn8PJ0wcIPq5TY6r6iZps0PtBanaRl_eAZnooWMWK1KY9HpaFDrIJI8R9cs"/>
+</div>
+</div>
+</div>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: PageContent -->
+<div class="px-10 pb-10 flex flex-col gap-10">
+<!-- Entry Section Grid -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Left: Amount and Categories -->
+<section class="col-span-8 bg-pink-50/40 rounded-[2.5rem] p-10 flex flex-col" data-purpose="transaction-primary-form">
+<div class="flex justify-between items-start mb-12">
+<h3 class="text-2xl font-bold">新增账目</h3>
+<!-- Switch -->
+<div class="bg-gray-100 p-1 rounded-full flex text-sm font-medium w-40">
+<button class="flex-1 py-2 bg-expense text-white rounded-full">支出</button>
+<button class="flex-1 py-2 text-gray-500">收入</button>
+</div>
+</div>
+<!-- Amount Display -->
+<div class="text-center py-10" data-purpose="amount-display">
+<p class="text-gray-400 font-medium mb-4">金额</p>
+<div class="flex items-center justify-center gap-2">
+<span class="text-sakura text-4xl font-bold opacity-70">¥</span>
+<span class="text-gray-100 text-8xl font-bold tracking-tight">0.00</span>
+</div>
+</div>
+<!-- Category Grid -->
+<div class="mt-auto" data-purpose="category-selector">
+<p class="text-gray-500 font-medium mb-6">选择分类</p>
+<div class="grid grid-cols-5 gap-y-8 gap-x-4">
+<!-- Item -->
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 bg-expense text-white rounded-full flex items-center justify-center shadow-lg shadow-pink-100">
+<i class="w-6 h-6" data-lucide="utensils"></i>
+</div>
+<span class="text-sm text-gray-500 font-medium">餐饮</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 bg-white text-gray-400 rounded-full flex items-center justify-center border border-gray-50">
+<i class="w-6 h-6" data-lucide="shopping-cart"></i>
+</div>
+<span class="text-sm text-gray-500 font-medium">购物</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 bg-white text-gray-400 rounded-full flex items-center justify-center border border-gray-50">
+<i class="w-6 h-6" data-lucide="bus"></i>
+</div>
+<span class="text-sm text-gray-500 font-medium">交通</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 bg-white text-gray-400 rounded-full flex items-center justify-center border border-gray-50">
+<i class="w-6 h-6" data-lucide="home"></i>
+</div>
+<span class="text-sm text-gray-500 font-medium">房租</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 bg-white text-gray-400 rounded-full flex items-center justify-center border border-gray-50">
+<i class="w-6 h-6" data-lucide="film"></i>
+</div>
+<span class="text-sm text-gray-500 font-medium">娱乐</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 bg-white text-gray-400 rounded-full flex items-center justify-center border border-gray-50">
+<i class="w-6 h-6" data-lucide="briefcase-medical"></i>
+</div>
+<span class="text-sm text-gray-500 font-medium">医疗</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 bg-white text-gray-400 rounded-full flex items-center justify-center border border-gray-50">
+<i class="w-6 h-6" data-lucide="receipt"></i>
+</div>
+<span class="text-sm text-gray-500 font-medium">账单</span>
+</div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer">
+<div class="w-14 h-14 bg-white text-gray-400 rounded-full flex items-center justify-center border border-gray-50">
+<i class="w-6 h-6" data-lucide="plus"></i>
+</div>
+<span class="text-sm text-gray-500 font-medium">更多</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Right: Details and Save -->
+<section class="col-span-4 bg-pink-50/30 rounded-[2.5rem] p-10 flex flex-col" data-purpose="transaction-details-form">
+<h3 class="text-xl font-bold mb-8">账目详情</h3>
+<!-- Payment Account -->
+<div class="mb-8" data-purpose="account-selector">
+<label class="block text-gray-500 text-sm font-medium mb-4">支付账户</label>
+<div class="space-y-3">
+<!-- WeChat -->
+<div class="flex items-center justify-between bg-white p-4 rounded-2xl border-2 border-sakura shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center text-green-500">
+<i class="w-6 h-6" data-lucide="message-circle"></i>
+</div>
+<span class="font-medium">微信支付</span>
+</div>
+<div class="w-5 h-5 bg-sakura rounded-full flex items-center justify-center text-white">
+<i class="w-3 h-3" data-lucide="check"></i>
+</div>
+</div>
+<!-- AliPay -->
+<div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-white hover:border-sakura/30 transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center text-blue-500">
+<i class="w-6 h-6" data-lucide="credit-card"></i>
+</div>
+<span class="font-medium">支付宝</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Date -->
+<div class="mb-8" data-purpose="date-selector">
+<label class="block text-gray-500 text-sm font-medium mb-4">日期</label>
+<div class="relative">
+<input class="w-full bg-white border-none rounded-2xl p-4 pr-12 font-medium focus:ring-2 focus:ring-sakura/30" type="text" value="11/24/2023"/>
+<i class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" data-lucide="calendar"></i>
+</div>
+</div>
+<!-- Remarks -->
+<div class="mb-10" data-purpose="remarks-field">
+<label class="block text-gray-500 text-sm font-medium mb-4">备注（选填）</label>
+<textarea class="w-full bg-white border-none rounded-2xl p-4 min-h-[120px] focus:ring-2 focus:ring-sakura/30 resize-none" placeholder="这笔钱花在哪里了？"></textarea>
+</div>
+<!-- Save Button -->
+<div class="mt-auto">
+<button class="gradient-button w-full py-5 rounded-sakura text-white font-bold flex items-center justify-center gap-2 shadow-xl shadow-pink-100 mb-4">
+<i class="w-6 h-6" data-lucide="save"></i>
+              保存账目
+            </button>
+<p class="text-center text-gray-400 text-xs">安全且私密的记录</p>
+</div>
+</section>
+</div>
+<!-- Recent Activity Section -->
+<section data-purpose="recent-activity">
+<div class="flex items-center justify-between mb-6">
+<h3 class="text-xl font-bold">最近活动</h3>
+<button class="text-sakura font-medium text-sm">查看历史记录</button>
+</div>
+<div class="grid grid-cols-3 gap-6">
+<!-- Activity Item 1 -->
+<div class="bg-pink-50/20 p-5 rounded-3xl flex items-center justify-between border border-pink-50">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center text-red-500">
+<i class="w-6 h-6" data-lucide="shopping-bag"></i>
+</div>
+<div>
+<p class="font-bold">优衣库</p>
+<p class="text-xs text-gray-400">今天, 2:15 PM</p>
+</div>
+</div>
+<span class="text-red-400 font-bold">-¥299.00</span>
+</div>
+<!-- Activity Item 2 -->
+<div class="bg-pink-50/20 p-5 rounded-3xl flex items-center justify-between border border-pink-50">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center text-red-500">
+<i class="w-6 h-6" data-lucide="coffee"></i>
+</div>
+<div>
+<p class="font-bold">星巴克</p>
+<p class="text-xs text-gray-400">今天, 9:05 AM</p>
+</div>
+</div>
+<span class="text-red-400 font-bold">-¥38.00</span>
+</div>
+<!-- Activity Item 3 -->
+<div class="bg-pink-50/20 p-5 rounded-3xl flex items-center justify-between border border-pink-50">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center text-green-500">
+<i class="w-6 h-6" data-lucide="wallet"></i>
+</div>
+<div>
+<p class="font-bold">工资转账</p>
+<p class="text-xs text-gray-400">昨天</p>
+</div>
+</div>
+<span class="text-green-500 font-bold">+¥15,000</span>
+</div>
+</div>
+</section>
+</div>
+<!-- END: PageContent -->
+</main>
+<!-- END: MainContent -->
+<!-- JavaScript for Icons -->
+<script data-purpose="icon-initialization">
+    lucide.createIcons();
+  </script>
+</body></html>
